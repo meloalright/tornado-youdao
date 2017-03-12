@@ -436,83 +436,234 @@ sqlite> select o1.degree from (score as t1 join course as t2 on t1.cno = t2.cno)
 
 28、查询“计算机系”与“电子工程系“不同职称的教师的Tname和Prof。
 
+sqlite> select tname, prof from teacher where depart in ('计算机系', '电子工程系');
+
+李诚|副教授
+张旭|讲师
+王萍|助教
+刘冰|助教
+
+
 
 29、查询选修编号为“3-105“课程且成绩至少高于选修编号为“3-245”的同学的Cno、Sno和Degree,并按Degree从高到低次序排序。
+
+sqlite> select * from student as t1 join (select * from score where cno = '3-105') as t2 on t1.sno = t2.sno;
+103|陆君|男|1965|95031|103|3-105|92
+105|匡明|男|1963|95031|105|3-105|88
+109|王芳|女|1963|95031|109|3-105|76
+101|李军|男|1954|95033|101|3-105|64
+107|王丽|女|1952|95033|107|3-105|91
+108|曾华|男|1967|95033|108|3-105|78
+
+sqlite> select * from student as t1 join (select * from score where cno = '3-245') as t2 on t1.sno = t2.sno;
+103|陆君|男|1965|95031|103|3-245|86
+105|匡明|男|1963|95031|105|3-245|75
+109|王芳|女|1963|95031|109|3-245|68
+
+>> select o1.sname, o1.sno, o1.degree, o2.degree from (select * from student as t1 join (select * from score where cno = '3-105') as t2 on t1.sno = t2.sno) as o1 join (select * from student as t1 join (select * from score where cno = '3-245') as t2 on t1.sno = t2.sno) as o2 on o1.sname = o2.sname where o1.degree > o2.degree order by o1.degree asc;
+
+王芳|109|76|68
+匡明|105|88|75
+陆君|103|92|86
+
+
 
 
 30、查询选修编号为“3-105”且成绩高于选修编号为“3-245”课程的同学的Cno、Sno和Degree.
 
+sqlite> select o1.sname, o1.sno, o1.degree, o2.degree from (select * from student as t1 join (select * from score where cno = '3-105') as t2 on t1.sno = t2.sno) as o1 join (select * from student as t1 join (select * from score where cno = '3-245') as t2 on t1.sno = t2.sno) as o2 on o1.sname = o2.sname where o1.degree > o2.degree;
+
+陆君|103|92|86
+匡明|105|88|75
+王芳|109|76|68
+
+
+
+
 
 31、查询所有教师和同学的name、sex和birthday.
+
+sqlite> select sname,ssex,sbirthday from student;
+曾华|男|1967
+匡明|男|1963
+王丽|女|1952
+李军|男|1954
+王芳|女|1963
+陆君|男|1965
+
+sqlite> select tname,tsex,tbirthday from teacher;
+李诚|男|1958-12-02
+张旭|男|1969-03-12
+王萍|女|1972-05-05
+刘冰|女|1977-08-14
+
+>> select sname,ssex,sbirthday from student union select tname,tsex,tbirthday from teacher;
+
+刘冰|女|1977-08-14
+匡明|男|1963
+张旭|男|1969-03-12
+曾华|男|1967
+李军|男|1954
+李诚|男|1958-12-02
+王丽|女|1952
+王芳|女|1963
+王萍|女|1972-05-05
+陆君|男|1965
+
 
 
 32、查询所有“女”教师和“女”同学的name、sex和birthday.
 
+sqlite> select sname,ssex,sbirthday from student where ssex = '女' union select tname,tsex,tbirthday from teacher where tsex = '女';
+
+刘冰|女|1977-08-14
+王丽|女|1952
+王芳|女|1963
+王萍|女|1972-05-05
+
+
 
 33、查询成绩比该课程平均成绩低的同学的成绩表。
+
+>> SELECT A.* FROM SCORE A WHERE DEGREE<(SELECT AVG(DEGREE) FROM SCORE B WHERE A.CNO=B.CNO);
+
+105|3-245|75
+109|3-245|68
+109|3-105|76
+101|3-105|64
+108|3-105|78
+108|6-166|81
+
+
 
 
 34、查询所有任课教师的Tname和Depart.
 
+sqlite> select tname, depart from course as t1 join teacher as t2 where t1.tno=t2.tno;
+
+王萍|计算机系
+李诚|计算机系
+张旭|电子工程系
+
+
+
 
 35  查询所有未讲课的教师的Tname和Depart. 
+
+sqlite> select tname,depart from teacher a where not exists
+        (select * from course b where a.tno=b.tno);
+
+刘冰|电子工程系
+
 
 
 36、查询至少有2名男生的班号。
 
+sqlite> select class from student where ssex = '男' group by class having count(ssex) > 1;
+
+95031
+95033
+
+
 
 37、查询Student表中不姓“王”的同学记录。
+
+sqlite> select * from student where sname not like '王%';
+
+108|曾华|男|1967|95033
+105|匡明|男|1963|95031
+101|李军|男|1954|95033
+103|陆君|男|1965|95031
+
 
 
 38、查询Student表中每个学生的姓名和年龄。
 
+sqlite> select sname, (2017-sbirthday) from student;
+
+曾华|50
+匡明|54
+王丽|65
+李军|63
+王芳|54
+陆君|52
+
+
 
 39、查询Student表中最大和最小的Sbirthday日期值。
+
+sqlite> select min(sbirthday) from student;
+1952
+
+sqlite> select max(sbirthday) from student;
+1967
+
+>> select min(sbirthday) from student union select max(sbirthday) from student;
+1952
+1967
+
 
 
 40、以班号和年龄从大到小的顺序查询Student表中的全部记录。
 
+sqlite> select * from (select * from student order by sbirthday desc) order by class desc;
+
+108|曾华|男|1967|95033
+101|李军|男|1954|95033
+107|王丽|女|1952|95033
+103|陆君|男|1965|95031
+105|匡明|男|1963|95031
+109|王芳|女|1963|95031
+
+
 
 41、查询“男”教师及其所上的课程。
+
+sqlite> select t2.cname from teacher as t1 join course as t2 on t1.tno = t2.tno where t1.tsex='男';
+
+操作系统
+数据电路
+
 
 
 42、查询最高分同学的Sno、Cno和Degree列。
 
+select * from score where degree = (select max(degree) from score);
+
+103|3-105|92
+
+
+
 
 43、查询和“李军”同性别的所有同学的Sname.
+
+sqlite> select sname from student where ssex = (select ssex from student where sname = '李军');
+
+曾华
+匡明
+李军
+陆君
+
 
 
 44、查询和“李军”同性别并同班的同学Sname.
 
+sqlite> select sname from student where ssex = ( select ssex from student where sname = '李军') and class = (select class from student where sname = '李军');
+
+曾华
+李军
+
+
 
 45、查询所有选修“计算机导论”课程的“男”同学的成绩表
 
+sqlite> select o1.sname, o1.degree from
+        (select t1.sname, t1.ssex, t2.cno, t2.degree from student as t1 join score as t2 on t1.sno=t2.sno where t1.ssex='男') 
+        as o1 join course as o2 where o1.cno=o2.cno and o2.cname='计算机导论';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+李军|64
+陆君|92
+匡明|88
+曾华|78
 
 ```
