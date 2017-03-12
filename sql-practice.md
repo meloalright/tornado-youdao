@@ -252,7 +252,8 @@ sqlite> SELECT A.SNAME, B.CNO, B.DEGREE FROM STUDENT AS A JOIN SCORE AS B ON A.S
 
 15、查询所有学生的Sno、Cname和Degree列。
 
-sqlite> SELECT ST.SNO, CR.CNAME, SC.DEGREE FROM (STUDENT AS ST JOIN SCORE AS SC ON ST.SNO=SC.SNO) AS MIX LEFT JOIN COURSE AS CR ON MIX.CNO=CR.CNO;
+sqlite> SELECT ST.SNO, CR.CNAME, SC.DEGREE FROM (STUDENT AS ST JOIN SCORE AS SC ON ST.SNO=SC.SNO)
+        AS MIX LEFT JOIN COURSE AS CR ON MIX.CNO=CR.CNO;
 
 108|计算机导论|78
 108|数据电路|81
@@ -271,7 +272,8 @@ sqlite> SELECT ST.SNO, CR.CNAME, SC.DEGREE FROM (STUDENT AS ST JOIN SCORE AS SC 
 
 16、查询所有学生的Sname、Cname和Degree列。
 
-sqlite> SELECT ST.SNAME, CR.CNAME, SC.DEGREE FROM (STUDENT AS ST JOIN SCORE AS SC ON ST.SNO=SC.SNO) AS MIX LEFT JOIN COURSE AS CR ON MIX.CNO=CR.CNO;
+sqlite> SELECT ST.SNAME, CR.CNAME, SC.DEGREE FROM (STUDENT AS ST JOIN SCORE AS SC ON ST.SNO=SC.SNO)
+        AS MIX LEFT JOIN COURSE AS CR ON MIX.CNO=CR.CNO;
 
 曾华|计算机导论|78
 曾华|数据电路|81
@@ -291,7 +293,8 @@ sqlite> SELECT ST.SNAME, CR.CNAME, SC.DEGREE FROM (STUDENT AS ST JOIN SCORE AS S
 
 17、查询“95033”班所选课程的平均分。
 
-sqlite> SELECT AVG(T2.DEGREE) FROM (STUDENT  AS T1  LEFT JOIN SCORE AS T2 ON T1.SNO =T2.SNO) WHERE T1.CLASS = '95033';
+sqlite> SELECT AVG(T2.DEGREE) FROM (STUDENT  AS T1  LEFT JOIN SCORE AS T2 ON T1.SNO =T2.SNO) 
+        WHERE T1.CLASS = '95033';
 
 79.6666666666667
 
@@ -301,40 +304,134 @@ sqlite> SELECT AVG(T2.DEGREE) FROM (STUDENT  AS T1  LEFT JOIN SCORE AS T2 ON T1.
 
 18、假设使用如下命令建立了一个grade表：
 
-
-create table grade(low   number(3,0),upp   number(3),rank   char(1));
-insert into grade values(90,100,’A’);
-insert into grade values(80,89,’B’);
-insert into grade values(70,79,’C’);
-insert into grade values(60,69,’D’);
-insert into grade values(0,59,’E’);
+create table grade(low number(3,0),upp number(3),rank char(1));
+insert into grade values(90,100,'A');
+insert into grade values(80,89,'B');
+insert into grade values(70,79,'C');
+insert into grade values(60,69,'D');
+insert into grade values(0,59,'E');
 commit;
 现查询所有同学的Sno、Cno和rank列。
+
+>> select t1.sno, t2.cno, bt2.rank from ((student as t1 join score as t2 on t1.sno = t2.sno) 
+   as bt1 join grade as bt2 on bt1.degree > bt2.low and bt1.degree < bt2.upp);
+
+108|6-166|B
+108|3-105|C
+105|3-105|B
+105|3-245|C
+107|3-105|A
+101|6-166|B
+101|3-105|D
+109|3-105|C
+109|3-245|D
+103|3-105|A
+103|3-245|B
+
+
+
+
 19、查询选修“3-105”课程的成绩高于“109”号同学成绩的所有同学的记录。
+
+sqlite> select * from student as t1 join score as t2 on t1.sno = t2.sno
+        where cno = '3-105' and degree > (select degree from student as
+        t1 join score as t2 on t1.sno = 108);
+
+103|陆君|男|1965|95031|103|3-105|92
+105|匡明|男|1963|95031|105|3-105|88
+107|王丽|女|1952|95033|107|3-105|91
+
+
 
 
 20、查询score中选学一门以上课程的同学中分数为非最高分成绩的记录。
 
+>>  SELECT * FROM score s WHERE DEGREE<(SELECT MAX(DEGREE) FROM SCORE) GROUP BY SNO HAVING 
+    COUNT(SNO)>1 ORDER BY DEGREE
+
+109|3-105|76
+107|6-106|79
+108|6-166|81
+101|6-166|85
+105|3-105|88
+
+
+
 
 21、查询成绩高于学号为“109”、课程号为“3-105”的成绩的所有记录。
+
+同19
+
 
 
 22、查询和学号为108的同学同年出生的所有学生的Sno、Sname和Sbirthday列。
 
+sqlite> select sno, sname, sbirthday from student where sbirthday = 
+        (select sbirthday from student where sno = 108);
+
+108|曾华|1967
+
+
+
 
 23、查询“张旭“教师任课的学生成绩。
+
+sqlite> select s1.sname, s2.degree from student as s1 join score as s2 
+        on s1.sno = s2.sno where cno = (select cno from teacher as t1 
+        join course as t2 on t1.tno = t2.tno where t1.tname='张旭');
+
+李军|85
+曾华|81
+
+
 
 
 24、查询选修某课程的同学人数多于5人的教师姓名。
 
+sqlite> select bt2.tname from ((select count(cno),* from score group by cno limit 1)
+        as t1 join course as t2 on t1.cno = t2.cno) as bt1 join teacher as bt2 on 
+        bt1.tno = bt2.tno;
+
+王萍
 
 25、查询95033班和95031班全体学生的记录。
+
+sqlite> select * from student where class in (95033, 95031);
+
+108|曾华|男|1967|95033
+105|匡明|男|1963|95031
+107|王丽|女|1952|95033
+101|李军|男|1954|95033
+109|王芳|女|1963|95031
+103|陆君|男|1965|95031
+
 
 
 26、查询存在有85分以上成绩的课程Cno.
 
+sqlite> select cno from (select * from score as t1 join course as t2
+        on t1.cno = t2.cno where t1.degree > 85) group by cno;
+
+3-105
+3-245
+
+
 
 27、查询出“计算机系“教师所教课程的成绩表。
+
+sqlite> select o1.degree from (score as t1 join course as t2 on t1.cno = t2.cno) 
+        as o1 join teacher as o2 on o1.tno = o2.tno where o2.depart = '计算机系';
+
+86
+75
+68
+64
+92
+88
+91
+78
+76
+
 
 
 28、查询“计算机系”与“电子工程系“不同职称的教师的Tname和Prof。
