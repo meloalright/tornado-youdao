@@ -13,5 +13,5 @@
 
 - lib
     query.py = 手写的ORM
-    (application=>pysqlite3=>db=>orm)
+    (application=>pysqlite3=>conn=>orm)
 ```
