@@ -12,9 +12,11 @@ import tornado.gen
 from tornado.options import define, options
 
 import datetime
+import sqlite3
 
 from jinja2 import Environment, FileSystemLoader
 
+from lib.loader import Loader
 import handler.index
 
 
@@ -43,6 +45,13 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", handler.index.IndexHandler),
         ]
+
+        self.conn = sqlite3.connect('db/youdao.db')
+
+        self.loader = Loader(self.conn)
+        self.user_model = self.loader.use("user.model")
+
+
 
         tornado.web.Application.__init__(self, handlers, **settings)
 

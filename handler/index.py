@@ -13,4 +13,5 @@ from .base import BaseHandler
 
 class IndexHandler(BaseHandler):
     def get(self, template_variables = {}):
+        print(self.user_model)
         self.render("index.html")

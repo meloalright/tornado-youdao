@@ -14,6 +14,8 @@ class Query(object):
         self.__reset()
         
     def __reset(self):
+        pass
 
     def __close(self):
+        pass
 
