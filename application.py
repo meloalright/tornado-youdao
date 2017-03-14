@@ -49,9 +49,9 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, **settings)
 
 
-        self.conn = sqlite3.connect('db/youdao.db')
+        self.db = sqlite3.connect('db/youdao.db')
 
-        self.loader = Loader(self.conn)
+        self.loader = Loader(self.db)
         self.user_model = self.loader.use("user.model")
 
 
