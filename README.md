@@ -1,6 +1,6 @@
 # tornado-youdao    
    
-### [vue.js] + [tornado] + [django] + [redis] 实现微型的网易云笔记   
+### [vue.js] + [tornado] + [手写orm] + [redis] 实现微型的网易云笔记   
    
    
    
@@ -13,5 +13,5 @@
 
 - lib
     query.py = 手写的ORM
-    (application-db=>orm=>handler-logic)
+    (application=>pysqlite3=>db=>orm)
 ```
