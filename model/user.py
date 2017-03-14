@@ -8,18 +8,16 @@ class UserModel(Query):
 
     def test_conn(self):
         conn = self.conn
-        conn.execute('''CREATE TABLE COM
+        conn.execute("DROP TABLE IF EXISTS TEST");
+        conn.execute('''CREATE TABLE TEST
             (ID INT PRIMARY KEY     NOT NULL,
             NAME           TEXT    NOT NULL,
-            AGE            INT     NOT NULL,
-            ADDRESS        CHAR(50),
-            SALARY         REAL);
+            SUB        CHAR(50));
             ''')
 
-        conn.execute("INSERT INTO COM (ID,NAME,AGE,ADDRESS,SALARY) VALUES (1, 'Paul', 32, 'California', 20000.00 )");
+        conn.execute("INSERT INTO TEST (ID,NAME,SUB) VALUES (1, 'YOUDAO', 'TEST OK' )");
 
         conn.commit()
-        cursor = conn.execute("SELECT * FROM COM")
-        print('list(cursor) = \n')
+        cursor = conn.execute("SELECT * FROM TEST")
         print(list(cursor))
-        conn.execute("DROP TABLE COM");
+        conn.execute("DROP TABLE TEST");

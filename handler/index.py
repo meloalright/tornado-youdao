@@ -13,5 +13,6 @@ from .base import BaseHandler
 
 class IndexHandler(BaseHandler):
     def get(self, template_variables = {}):
-        print(self.user_model)
+        u = self.user_model()
+        u.test_conn()
         self.render("index.html")

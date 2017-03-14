@@ -46,6 +46,9 @@ class Application(tornado.web.Application):
             (r"/", handler.index.IndexHandler),
         ]
 
+        tornado.web.Application.__init__(self, handlers, **settings)
+
+
         self.conn = sqlite3.connect('db/youdao.db')
 
         self.loader = Loader(self.conn)
@@ -53,7 +56,6 @@ class Application(tornado.web.Application):
 
 
 
-        tornado.web.Application.__init__(self, handlers, **settings)
 
 
 def main():
