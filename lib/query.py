@@ -19,9 +19,14 @@ class Query(object):
     def __close(self):
         pass
 
-    def add(self, values):
-        self.db.execute("INSERT INTO %s VALUES %s"% (self.table_name ,values))
+    def add(self, *args):
+        values = args
+        self.db.execute("INSERT INTO {table} VALUES {kwarg}".format(table=self.table_name, kwarg=values))
         self.db.commit()
+
+
+    def select(self, filt=''):
+        return list(self.db.execute("SELECT * FROM {table} {filt}".format(table=self.table_name, filt=filt)))
 
     def show_all(self):
         print(list(self.db.execute("SELECT * FROM %s"% (self.table_name))))

@@ -15,6 +15,7 @@ class UserModel(Query):
             SUB        CHAR(50));
             ''')
 
-        self.add("(1, 'melo' ,'right')")
-        self.show_all()
+        self.add(1, 'youdao' ,'test')
+        self.add(2, 'youdao' ,'tornado')
+        print(self.select())
 
