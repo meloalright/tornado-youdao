@@ -1,5 +1,6 @@
 *.pyc
 *.db
+*.xml
 .DS_Store
 node_modules/
 __pycache__
