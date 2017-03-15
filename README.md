@@ -1,6 +1,6 @@
 # tornado-youdao    
    
-### [vue.js] + [tornado] + [手写orm] + [redis] 实现微型的网易云笔记   
+### [vue.js] + [tornado] + [手写orm] + [diff] + [redis] 实现微型的网易云笔记
    
    
    
