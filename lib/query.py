@@ -28,6 +28,16 @@ class Query(object):
     def select(self, filt=''):
         return list(self.db.execute("SELECT * FROM {table} {filt}".format(table=self.table_name, filt=filt)))
 
-    def show_all(self):
-        print(list(self.db.execute("SELECT * FROM %s"% (self.table_name))))
+
+    def update(self, set_filt=''):
+        self.db.execute("UPDATE {table} {set_filt}".format(table=self.table_name, set_filt=set_filt))
+        self.db.commit()
+
+
+    def delete(self, filt=''):
+        self.db.execute("DELETE FROM {table} {filt}".format(table=self.table_name, filt=filt))
+        self.db.commit()
+
+
+
 

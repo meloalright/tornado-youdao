@@ -10,12 +10,16 @@ class UserModel(Query):
         db = self.db
         db.execute("DROP TABLE IF EXISTS USER");
         db.execute('''CREATE TABLE USER
-            (ID INT PRIMARY KEY     NOT NULL,
-            NAME           TEXT    NOT NULL,
-            SUB        CHAR(50));
-            ''')
+                   (ID INT PRIMARY KEY     NOT NULL,
+                    NAME           TEXT    NOT NULL,
+                    SUB        CHAR(50));
+                   ''')
 
         self.add(1, 'youdao' ,'test')
         self.add(2, 'youdao' ,'tornado')
-        print(self.select())
+        self.add(3, 'youdao' ,'netease')
+        self.update('set sub = 163 where id = 2')
+        self.delete('where id = 3')
+        print(self.select('where id >= 1'))
+        db.execute("DROP TABLE IF EXISTS USER");
 
