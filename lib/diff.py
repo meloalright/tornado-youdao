@@ -185,7 +185,7 @@ class differ(object):
     def _push_plus_diff_lazy(self, source, dist):
         diff_mat = self._create_diff_matrix_lazy(source, dist)
 
-        f = -1
+        f = 0
 
         #answer = []
 
@@ -197,7 +197,7 @@ class differ(object):
                 #f = f + 1
             else:
                 sets.remove(None)
-                f = list(sets)[0]
+                f = list(sets)[0] + 1
 
 
     #
@@ -208,7 +208,7 @@ class differ(object):
     def _push_minus_diff_lazy(self, source, dist):
         trans_mat = self._trans(self._create_diff_matrix_lazy(source, dist))
 
-        f = -1
+        f = 0
 
         answer = []
 
@@ -220,7 +220,7 @@ class differ(object):
                 #f = f + 1
             else:
                 sets.remove(None)
-                f = list(sets)[0]
+                f = list(sets)[0] + 1
 
 
 
