@@ -216,6 +216,7 @@ class merger(object):
                 mergeList[i].append(source_read[i])
             except:
                 pass
+            '''
             try:
                 diff_line = d2._diff_list[i]
                 for o in diff_line:
@@ -227,6 +228,7 @@ class merger(object):
                 mergeList[i].append(source_read[i])
             except:
                 pass
+            '''
         final_list = []
         dist = ''
         for line in mergeList:
