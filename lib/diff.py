@@ -20,7 +20,7 @@ class differ(object):
     def _init_diff_list(self, source, dist):
         ls = source.split('\n')
         ld = dist.split('\n')
-        size = len(ls) + len(ld)
+        size = max(len(ls), len(ld))
         self.diff_list = [[] for i in range(0, size - 1)]
 
     #
@@ -84,7 +84,7 @@ class differ(object):
         return mat
 
     #
-    # diff 矩阵
+    # diff-active 矩阵
     # ===================
     #   a a a c a c o p(source)
     # a 0         - -
@@ -148,11 +148,13 @@ class differ(object):
 
         for ils in range(0, len(diff_mat)):
             line = diff_mat[ils]
-            if set(line) == {None}:
+            sets = set(line)
+            if sets == {None}:
                 self.diff_list[f].append({'pos': f, 'str': '+ %s'%dist.split('\n')[ils]})
                 f = f + 1
             else:
-                f = f + 1
+                sets.remove(None)
+                f = list(sets)[0] + 1
 
         #return answer
 
