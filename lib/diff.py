@@ -189,7 +189,8 @@ class differ(object):
                 self.diff_list[f].append({'pos': f, 'str': '+ %s'%dist.split('\n')[ils]})
                 #f = f + 1
             else:
-                f = f + 1
+                sets.remove(None)
+                f = list(sets)[0] + 1
 
         #return answer
 
