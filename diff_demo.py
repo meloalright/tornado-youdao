@@ -1,30 +1,44 @@
 import os
 from lib.diff import differ
+from lib.diff import merger
 
-def test():
-    dirs = './diff-note/'
+dirs = './diff-note/'
 
-    source = open(dirs + 'source.txt', 'r').read()
-    dist = open(dirs + 'dist.txt', 'r').read()
+source = open(dirs + 'source.txt', 'r').read()
+dist = open(dirs + 'dist.txt', 'r').read()
+dist_branch = open(dirs + 'dist_branch.txt', 'r').read()
+
+def test_diff():
+    global source
+    global dist
 
     d = differ()
-
-    print('======source======')
-    print(source)
-
-    print('======dist======')
-    print(dist)
-
-
+    '''
+    打印diff_patch
+    '''
     print('======diff-lazy-patch======')
-    for line in d.diff_lazy_patch(source, dist):
-        print('@{pos} {str}'.format(pos=line['pos'], str=line['str']))
+    for line in d.diff(source, dist):
+        print('@{pos} {type} {str}'.format(pos=line['pos'], type=line['type'], str=line['str']))
 
-
+    '''
+    打印diff逻辑矩阵
+    '''
     print('======lazy-matrix======')
-    for line in d._create_diff_matrix_lazy(source, dist):
+    for line in d.diff(source, dist):
         print(line)
+
+def test_merge():
+    global source
+    global dist
+    global dist_branch
+    m = merger()
+    '''
+    测试merge逻辑
+    '''
+    print('======merge======')
+    m.merge(source, dist, dist_branch)
 
 
 if __name__ == '__main__':
-    test()
+    test_diff()
+    test_merge()
