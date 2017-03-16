@@ -21,7 +21,11 @@ print('======matrix======')
 for line in d._create_diff_matrix(source, dist):
     print(line)
 
+
+
+
 '''
+>> python3 diff_demo.py 
 ======source======
 七步诗
 
@@ -32,6 +36,7 @@ for line in d._create_diff_matrix(source, dist):
 
 曹植
 ======dist======
+完整版
 七步诗
 
 煮豆持作羹
@@ -43,21 +48,23 @@ for line in d._create_diff_matrix(source, dist):
 
 曹植
 ======diff======
-@2 - 煮豆燃豆萁
-@2 + 煮豆持作羹
-@3 + 漉菽以为汁
-@4 + 萁在釜下燃
-@6 - 本是同根生
-@6 + 本自同根生
+@0 + 完整版
+@3 - 煮豆燃豆萁
+@3 + 煮豆持作羹
+@4 + 漉菽以为汁
+@5 + 萁在釜下燃
+@7 - 本是同根生
+@7 + 本自同根生
 ======matrix======
-[0, None, None, None, None, None, None, None]
-[None, 1, None, None, None, None, None, None]
+[None, None, None, None, None, None, None, None]
+[1, None, None, None, None, None, None, None]
+[None, 2, None, None, None, None, None, None]
 [None, None, None, None, None, None, None, None]
 [None, None, None, None, None, None, None, None]
 [None, None, None, None, None, None, None, None]
-[None, None, None, 5, None, None, None, None]
+[None, None, None, 6, None, None, None, None]
 [None, None, None, None, None, None, None, None]
-[None, None, None, None, None, 7, None, None]
-[None, None, None, None, None, None, 8, None]
-[None, None, None, None, None, None, None, 9]
+[None, None, None, None, None, 8, None, None]
+[None, None, None, None, None, None, 9, None]
+[None, None, None, None, None, None, None, 10]
 '''

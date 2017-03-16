@@ -139,26 +139,3 @@ class differ(object):
         return answer
 
 
-'''
-df = differ()
-diff = df.diff('today is so well\nyou know\nright\n2017\nend',
-               'today is so well\nyeah\nwakawaka\nyou know\nright\n2017.3.16')
-
-
-print(diff)
-
-mat =
-[0, None, None, None, None]
-
-[None, None, None, None, None]
-
-[None, None, None, None, None]
-
-[None, 3, None, None, None]
-
-[None, None, 4, None, None]
-
-[None, None, None, None, None]
-
-[{'pos': 1, 'str': '+ yeah'}, {'pos': 2, 'str': '+ wakawaka'}, {'pos': 5, 'str': '- 2017'}, {'pos': 5, 'str': '+ 2017.3.16'}, {'pos': 6, 'str': '- end'}]
-'''
