@@ -156,7 +156,6 @@ class differ(object):
                 sets.remove(None)
                 f = list(sets)[0] + 1
 
-        #return answer
 
     # 压入[-]逻辑
     def _push_minus_diff_active(self, source, dist):
@@ -175,19 +174,7 @@ class differ(object):
             else:
                 sets.remove(None)
                 f = list(sets)[0] + 1
-        return answer
 
-
-    #diff调用入口
-    def diff_active_patch(self, source, dist):
-        self._init_diff_list(source, dist)
-        self._push_minus_diff_active(source, dist)
-        self._push_plus_diff_active(source, dist)
-
-        answer = []
-        for l in self.diff_list:
-            answer += l
-        return answer
 
 
     #
@@ -212,7 +199,6 @@ class differ(object):
                 sets.remove(None)
                 f = list(sets)[0]
 
-        #return answer
 
     #
     #
@@ -235,8 +221,23 @@ class differ(object):
             else:
                 sets.remove(None)
                 f = list(sets)[0]
-        return answer
 
+
+
+    #
+    #
+    # @ active
+    #
+    # active-diff调用入口
+    def diff_active_patch(self, source, dist):
+        self._init_diff_list(source, dist)
+        self._push_minus_diff_active(source, dist)
+        self._push_plus_diff_active(source, dist)
+
+        answer = []
+        for l in self.diff_list:
+            answer += l
+        return answer
 
     #
     #
