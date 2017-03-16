@@ -32,21 +32,23 @@ class differ(object):
         mat = [[None for i in ls] for i in ld]
         return mat
 
+
+
     #
-    # diff 矩阵
+    # lazy_diff 矩阵
     # ===================
     #   a a a c a c o p(source)
     # a 0         - -
     # a   1       - -
     # a     2     - -
-    # k ++++++++++x+x+++++++3k
-    # c       4   - -
-    # a         5 - -
-    # b ++++++++++x+x+++++++6b
+    # k ++++++++++x+x+++++++2k
+    # c       3   - -
+    # a         4 - -
+    # b ++++++++++x+x+++++++4b
     # p           - - 8
     #             - -
-    #             -6c
-    #               -7o
+    #             -4c
+    #               -4o
 
     # (dist)
     # ====================
@@ -81,8 +83,24 @@ class differ(object):
 
         return mat
 
-
-    def _create_diff_matrix(self, source, dist):
+    #
+    # diff 矩阵
+    # ===================
+    #   a a a c a c o p(source)
+    # a 0         - -
+    # a   1       - -
+    # a     2     - -
+    # k ++++++++++x+x+++++++3k
+    # c       4   - -
+    # a         5 - -
+    # b ++++++++++x+x+++++++6b
+    # p           - - 8
+    #             - -
+    #             -6c
+    #               -7o
+    # (dist)
+    # ====================
+    def _create_diff_matrix_active(self, source, dist):
         mat = self._create_matrix(source, dist)
 
         f = 0
@@ -121,8 +139,8 @@ class differ(object):
 
 
     # 压入[+]逻辑
-    def _push_plus_diff(self, source, dist):
-        diff_mat = self._create_diff_matrix(source, dist)
+    def _push_plus_diff_active(self, source, dist):
+        diff_mat = self._create_diff_matrix_active(source, dist)
 
         f = 0
 
@@ -139,8 +157,8 @@ class differ(object):
         #return answer
 
     # 压入[-]逻辑
-    def _push_minus_diff(self, source, dist):
-        trans_mat = self._trans(self._create_diff_matrix(source, dist))
+    def _push_minus_diff_active(self, source, dist):
+        trans_mat = self._trans(self._create_diff_matrix_active(source, dist))
 
         f = 0
 
@@ -159,10 +177,10 @@ class differ(object):
 
 
     #diff调用入口
-    def diff(self, source, dist):
+    def diff_active_patch(self, source, dist):
         self._init_diff_list(source, dist)
-        self._push_minus_diff(source, dist)
-        self._push_plus_diff(source, dist)
+        self._push_minus_diff_active(source, dist)
+        self._push_plus_diff_active(source, dist)
 
         answer = []
         for l in self.diff_list:
@@ -170,11 +188,10 @@ class differ(object):
         return answer
 
 
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
+    #
+    #
+    # @ lazy
+    #
     # lazy压入[+]逻辑
     def _push_plus_diff_lazy(self, source, dist):
         diff_mat = self._create_diff_matrix_lazy(source, dist)
@@ -195,11 +212,10 @@ class differ(object):
 
         #return answer
 
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
+    #
+    #
+    # @ lazy
+    #
     # 压入[-]逻辑
     def _push_minus_diff_lazy(self, source, dist):
         trans_mat = self._trans(self._create_diff_matrix_lazy(source, dist))
@@ -220,14 +236,11 @@ class differ(object):
         return answer
 
 
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
-    ##########lazy##############
-    #diff调用入口
+    #
+    #
+    # @ lazy
+    #
+    # lazydiff调用入口
     def diff_lazy_patch(self, source, dist):
         self._init_diff_list(source, dist)
         self._push_minus_diff_lazy(source, dist)
