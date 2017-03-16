@@ -22,6 +22,9 @@ for line in d._create_diff_matrix(source, dist):
     print(line)
 
 
+print('======lazy-matrix======')
+for line in d._create_diff_matrix_lazy(source, dist):
+    print(line)
 
 
 '''

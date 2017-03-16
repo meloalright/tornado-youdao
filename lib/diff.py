@@ -50,6 +50,38 @@ class differ(object):
 
     # (dist)
     # ====================
+
+    def _create_diff_matrix_lazy(self, source, dist):
+        mat = self._create_matrix(source, dist)
+
+        f = 0
+        memory = f
+
+        source_readlist = source.split('\n')
+        dist_readlist = dist.split('\n')
+
+
+
+        for its in range(0, len(source_readlist)):
+            for ids in range(f, len(dist_readlist)):
+                si = source_readlist[its]
+                di = dist_readlist[ids]
+
+                if si == di:
+                    mat[ids][its] = its
+                    f = f + 1
+                    #找到了就更新memory
+                    memory = f
+                    break
+                else:
+                    f = f + 1
+                    pass
+            #没找到就回退f=memory
+            f = memory
+
+        return mat
+
+
     def _create_diff_matrix(self, source, dist):
         mat = self._create_matrix(source, dist)
 
@@ -77,7 +109,6 @@ class differ(object):
                     pass
             #没找到就回退f=memory
             f = memory
-
 
         return mat
 
