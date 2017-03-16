@@ -170,12 +170,16 @@ class differ(object):
         return answer
 
 
-    ##lazy
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
     # lazy压入[+]逻辑
     def _push_plus_diff_lazy(self, source, dist):
         diff_mat = self._create_diff_matrix_lazy(source, dist)
 
-        f = 0
+        f = -1
 
         #answer = []
 
@@ -183,17 +187,22 @@ class differ(object):
             line = diff_mat[ils]
             if set(line) == {None}:
                 self.diff_list[f].append({'pos': f, 'str': '+ %s'%dist.split('\n')[ils]})
-                f = f + 1
+                #f = f + 1
             else:
                 f = f + 1
 
         #return answer
 
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
     # 压入[-]逻辑
     def _push_minus_diff_lazy(self, source, dist):
         trans_mat = self._trans(self._create_diff_matrix_lazy(source, dist))
 
-        f = 0
+        f = -1
 
         answer = []
 
@@ -202,13 +211,20 @@ class differ(object):
             sets = set(line)
             if sets == {None}:
                 self.diff_list[f].append({'pos': f, 'str': '- %s'%source.split('\n')[ils]})
-                f = f + 1
+                #f = f + 1
             else:
                 sets.remove(None)
                 f = list(sets)[0] + 1
         return answer
 
 
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
+    ##########lazy##############
     #diff调用入口
     def diff_lazy_patch(self, source, dist):
         self._init_diff_list(source, dist)
