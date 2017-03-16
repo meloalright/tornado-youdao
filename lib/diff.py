@@ -46,7 +46,7 @@ class differ(object):
         ls = source.split('\n')
         ld = dist.split('\n')
         size = max(len(ls), len(ld))
-        self._diff_list = [[] for i in range(0, size - 1)]
+        self._diff_list = [[] for i in range(0, size)]
 
 
     # 初始化diff矩阵
@@ -205,6 +205,7 @@ class merger(object):
         # merge patch here
         #
         for i in range(0, len(mergeList)):
+            ''''''
             try:
                 diff_line = d1._diff_list[i]
                 for o in diff_line:
@@ -212,11 +213,11 @@ class merger(object):
                         mergeList[i].append(o['str'])
                     elif (o['type'] == '-'):
                         mergeList[i] = []
-                        source_read[i] = []
-                mergeList[i].append(source_read[i])
+                        #source_read[i] = []
+                #mergeList[i].append(source_read[i])
             except:
                 pass
-            '''
+            ''''''
             try:
                 diff_line = d2._diff_list[i]
                 for o in diff_line:
@@ -228,7 +229,7 @@ class merger(object):
                 mergeList[i].append(source_read[i])
             except:
                 pass
-            '''
+
         final_list = []
         dist = ''
         for line in mergeList:
