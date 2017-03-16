@@ -185,12 +185,13 @@ class differ(object):
 
         for ils in range(0, len(diff_mat)):
             line = diff_mat[ils]
-            if set(line) == {None}:
+            sets = set(line)
+            if sets == {None}:
                 self.diff_list[f].append({'pos': f, 'str': '+ %s'%dist.split('\n')[ils]})
                 #f = f + 1
             else:
                 sets.remove(None)
-                f = list(sets)[0] + 1
+                f = list(sets)[0]
 
         #return answer
 
@@ -215,7 +216,7 @@ class differ(object):
                 #f = f + 1
             else:
                 sets.remove(None)
-                f = list(sets)[0] + 1
+                f = list(sets)[0]
         return answer
 
 
