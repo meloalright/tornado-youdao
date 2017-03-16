@@ -36,7 +36,8 @@ def test_merge():
     测试merge逻辑
     '''
     print('======merge======')
-    m.merge(source, dist, dist_branch)
+    dist = m.merge(source, dist, dist_branch)
+    print(dist)
 
 
 if __name__ == '__main__':

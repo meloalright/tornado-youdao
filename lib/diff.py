@@ -237,4 +237,4 @@ class merger(object):
         for iter in final_list:
             if iter != []:
                 dist += iter + '\n'
-        print(dist)
+        return dist
