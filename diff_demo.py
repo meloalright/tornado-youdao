@@ -21,6 +21,9 @@ print('======matrix======')
 for line in d._create_diff_matrix(source, dist):
     print(line)
 
+print('======diff-lazy-patch======')
+for line in d.diff_lazy_patch(source, dist):
+    print('@{pos} {str}'.format(pos=line['pos'], str=line['str']))
 
 print('======lazy-matrix======')
 for line in d._create_diff_matrix_lazy(source, dist):
