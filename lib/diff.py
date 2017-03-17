@@ -97,6 +97,7 @@ class differ(object):
 
 
 
+
     #
     #
     # @ lazy
@@ -136,7 +137,8 @@ class differ(object):
             sets = set(line)
             if sets == {None}:
                 self._diff_list[f].append({'pos': f, 'type': '-', 'str': '%s'%source.split('\n')[ils]})
-                #f = f + 1
+                f = f + 1
+                ####
             else:
                 sets.remove(None)
                 f = list(sets)[0] + 1
@@ -168,6 +170,70 @@ class merger(object):
 
     def __init__(self):
         self.mergeList = []
+
+
+    def _match_diff_truth(self, patch_line):
+        truth = {'+':0, '-':0}
+        for o in patch_line:
+            if o['type'] == '+':
+                truth['+'] += 1
+            elif o['type'] == '-':
+                truth['-'] += 1
+        return truth
+
+    def _append(self, source_line, plus_line):
+        dist_line = []
+        for o in plus_line:
+            dist_line.append(o['str'])
+        dist_line.append(source_line)
+        return dist_line
+
+
+    def _confict(self, source_line, patch_line):
+        dist_line = []
+        for o in patch_line:
+            dist_line.append(o['type'] + o['str'])
+        dist_line.append('source:' + source_line)
+        return dist_line
+
+    def _filt_plus_line(self, patch_line):
+        return [o for o in patch_line if o['type'] == '+']
+    
+    # 真值匹配
+    #(-)=0 (+)=more : append
+    #(-)=1 (+)=more : empty+apppend
+    #
+    #(-)=2 (+)=0 : empty
+    #(-)=2 (+)=more : confict
+    def _truth_table_match(self, source_line, patch_line):
+ 
+        dist = ''
+        dist_line = []
+        truth = self._match_diff_truth(patch_line)
+
+        #print('truth')
+        #print(patch_line)
+        #print(truth)
+        #print('truth')
+
+        if truth['-'] == 0 and truth['+'] > 0:
+            #(-)=0 (+)=more : append
+            plus_line = patch_line
+            dist = self._append(source_line, plus_line)
+        elif truth['-'] == 1 and truth['+'] > 0:
+            #(-)=1 (+)=more : empty+apppend
+            plus_line = self._filt_plus_line(patch_line)
+            dist = self._append('', plus_line)
+        elif truth['-'] == 2 and truth['+'] == 0:
+            #(-)=2 (+)=0 : empty
+            dist = []
+        elif truth['-'] == 2 and truth['+'] > 0:
+            #(-)=2 (+)=more : confict
+            dist = self._confict(source_line, patch_line)
+
+        return dist
+
+
     #
     #
     # @ merge
@@ -180,6 +246,12 @@ class merger(object):
     # {'str': '+ 萁在釜下燃', 'pos': 2}, \
     # {'str': '- 本是同根生', 'pos': 4},
     # {'str': '+ 本自同根生', 'pos': 4}]
+    #
+    #
+    # [{'pos': 5, 'str': '相煎何太急', 'type': '-'}
+    # {'pos': 5, 'str': '相煎何太急?!', 'type': '+'}
+    # {'pos': 7, 'str': '曹植', 'type': '-'}
+    # {'pos': 7, 'str': '曹植作', 'type': '+'}]
     #
     #
     def merge(self, source, dist_1, dist_2):
@@ -195,7 +267,8 @@ class merger(object):
         d2._init_diff_matrix_lazy(source, dist_2)
         d2._push_minus_diff_lazy(source, dist_2)
         d2._push_plus_diff_lazy(source, dist_2)
-
+        #print(d1._diff_list)
+        #print(d2._diff_list)
         #
         # 创建mergeList
         #
@@ -209,32 +282,26 @@ class merger(object):
             try:
                 diff_line = d1._diff_list[i]
                 for o in diff_line:
-                    if (o['type'] == '+'):
-                        mergeList[i].append(o['str'])
-                    elif (o['type'] == '-'):
-                        mergeList[i] = []
-                        #source_read[i] = []
-                #mergeList[i].append(source_read[i])
+                    mergeList[i].append(o)
             except:
                 pass
             ''''''
             try:
                 diff_line = d2._diff_list[i]
                 for o in diff_line:
-                    if (o['type'] == '+'):
-                        mergeList[i].append(o['str'])
-                    elif (o['type'] == '-'):
-                        mergeList[i] = []
-                        source_read[i] = []
-                mergeList[i].append(source_read[i])
+                    mergeList[i].append(o)
             except:
                 pass
 
-        final_list = []
+        merge_dist_list = [self._truth_table_match(source_read[index], mergeList[index]) for index in range(0, len(source_read))]
+        print(merge_dist_list)
         dist = ''
-        for line in mergeList:
-            final_list += line
-        for iter in final_list:
-            if iter != []:
-                dist += iter + '\n'
+        for str_line in merge_dist_list:
+            if str_line == '':
+                dist += '\n\n'
+            else:
+                try:
+                    dist += ('\n').join(str_line)
+                except:
+                    pass
         return dist

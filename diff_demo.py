@@ -17,14 +17,14 @@ def test_diff():
     打印diff_patch
     '''
     print('======diff-lazy-patch======')
-    for line in d.diff(source, dist):
+    for line in d.diff(source, dist_branch):
         print('@{pos} {type} {str}'.format(pos=line['pos'], type=line['type'], str=line['str']))
 
     '''
     打印diff逻辑矩阵
     '''
     print('======lazy-matrix======')
-    for line in d.diff(source, dist):
+    for line in d.diff(source, dist_branch):
         print(line)
 
 def test_merge():
