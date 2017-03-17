@@ -4,9 +4,9 @@ from lib.diff import merger
 
 dirs = './diff-note/'
 
-source = open(dirs + 'source.txt', 'r').read()
-dist = open(dirs + 'dist.txt', 'r').read()
-dist_branch = open(dirs + 'dist_branch.txt', 'r').read()
+source = open(dirs + 'source.txt', 'r').readlines()
+dist = open(dirs + 'dist.txt', 'r').readlines()
+dist_branch = open(dirs + 'dist_branch.txt', 'r').readlines()
 
 def test_diff():
     global source
@@ -20,12 +20,7 @@ def test_diff():
     for line in d.diff(source, dist_branch):
         print('@{pos} {type} {str}'.format(pos=line['pos'], type=line['type'], str=line['str']))
 
-    '''
-    打印diff逻辑矩阵
-    '''
-    print('======lazy-matrix======')
-    for line in d.diff(source, dist_branch):
-        print(line)
+
 
 def test_merge():
     global source
@@ -35,11 +30,11 @@ def test_merge():
     '''
     测试merge逻辑
     '''
-    print('======merge======')
     dist = m.merge(source, dist, dist_branch)
+    print('======merge======')
     print(dist)
 
 
 if __name__ == '__main__':
-    test_diff()
+    #test_diff()
     test_merge()

@@ -25,8 +25,8 @@ class differ(object):
     # 生成一个n*n的矩阵
     #
     def _create_matrix(self, source, dist):
-        ls = source.split('\n')
-        ld = dist.split('\n')
+        ls = source
+        ld = dist
         mat = [[None for i in ls] for i in ld]
         return mat
 
@@ -43,9 +43,8 @@ class differ(object):
     # 初始化diff逻辑字符串列表
     # NOT BLACK BOX
     def _init_diff_list(self, source, dist):
-        ls = source.split('\n')
-        ld = dist.split('\n')
-        size = max(len(ls), len(ld))
+        ls = source
+        size = len(ls)
         self._diff_list = [[] for i in range(0, size)]
 
 
@@ -73,8 +72,8 @@ class differ(object):
         f = 0
         memory = f
 
-        source_readlist = source.split('\n')
-        dist_readlist = dist.split('\n')
+        source_readlist = source#.split('\n')
+        dist_readlist = dist#.split('\n')
 
         for its in range(0, len(source_readlist)):
             for ids in range(f, len(dist_readlist)):
@@ -114,7 +113,7 @@ class differ(object):
             line = diff_mat[ils]
             sets = set(line)
             if sets == {None}:
-                self._diff_list[f].append({'pos': f, 'type': '+', 'str': '%s'%dist.split('\n')[ils]})
+                self._diff_list[f].append({'pos': f, 'type': '+', 'str': '%s'%dist[ils]})
                 #f = f + 1
             else:
                 sets.remove(None)
@@ -136,7 +135,7 @@ class differ(object):
             line = trans_mat[ils]
             sets = set(line)
             if sets == {None}:
-                self._diff_list[f].append({'pos': f, 'type': '-', 'str': '%s'%source.split('\n')[ils]})
+                self._diff_list[f].append({'pos': f, 'type': '-', 'str': '%s'%source[ils]})
                 f = f + 1
                 ####
             else:
@@ -185,15 +184,18 @@ class merger(object):
         dist_line = []
         for o in plus_line:
             dist_line.append(o['str'])
-        dist_line.append(source_line)
+        if source_line is not '':
+            dist_line.append(source_line)
         return dist_line
 
 
     def _confict(self, source_line, patch_line):
         dist_line = []
+        dist_line.append('-CONFLCIT-\n')
+        dist_line.append('source:' + source_line)
         for o in patch_line:
             dist_line.append(o['type'] + o['str'])
-        dist_line.append('source:' + source_line)
+        dist_line.append('--------\n')
         return dist_line
 
     def _filt_plus_line(self, patch_line):
@@ -205,32 +207,48 @@ class merger(object):
     #
     #(-)=2 (+)=0 : empty
     #(-)=2 (+)=more : confict
+    #
+    #(-)=1 (+)=0 : empty
+    #(-)=0 (+)=0 : do nothing
     def _truth_table_match(self, source_line, patch_line):
  
         dist = ''
         dist_line = []
         truth = self._match_diff_truth(patch_line)
-
-        #print('truth')
-        #print(patch_line)
-        #print(truth)
-        #print('truth')
-
+        '''
+        print('truth')
+        print(patch_line)
+        print(truth)
+        '''
+        #(-)=0 (+)=more : append
         if truth['-'] == 0 and truth['+'] > 0:
-            #(-)=0 (+)=more : append
             plus_line = patch_line
             dist = self._append(source_line, plus_line)
+        
+        #(-)=1 (+)=more : empty+apppend
         elif truth['-'] == 1 and truth['+'] > 0:
-            #(-)=1 (+)=more : empty+apppend
             plus_line = self._filt_plus_line(patch_line)
             dist = self._append('', plus_line)
+        
+        #(-)=2 (+)=0 : empty
         elif truth['-'] == 2 and truth['+'] == 0:
-            #(-)=2 (+)=0 : empty
             dist = []
+        
+        #(-)=2 (+)=more : confict
         elif truth['-'] == 2 and truth['+'] > 0:
-            #(-)=2 (+)=more : confict
             dist = self._confict(source_line, patch_line)
-
+        
+        #(-)=1 (+)=0 : empty
+        elif truth['-'] == 1 and truth['+'] == 0:
+            dist = []
+        
+        #(-)=0 (+)=0 : do nothing
+        elif truth['-'] == 0 and truth['+'] == 0:
+            dist = source_line
+        '''
+        print(dist)
+        print('truth')
+        '''
         return dist
 
 
@@ -238,20 +256,6 @@ class merger(object):
     #
     # @ merge
     # @ 将两个diff_patch合并
-    #
-    #[{'str': '+ 完整版', 'pos': 0},
-    # {'str': '- 煮豆燃豆萁', 'pos': 2},
-    # {'str': '+ 煮豆持作羹', 'pos': 2},
-    # {'str': '+ 漉菽以为汁', 'pos': 2},
-    # {'str': '+ 萁在釜下燃', 'pos': 2}, \
-    # {'str': '- 本是同根生', 'pos': 4},
-    # {'str': '+ 本自同根生', 'pos': 4}]
-    #
-    #
-    # [{'pos': 5, 'str': '相煎何太急', 'type': '-'}
-    # {'pos': 5, 'str': '相煎何太急?!', 'type': '+'}
-    # {'pos': 7, 'str': '曹植', 'type': '-'}
-    # {'pos': 7, 'str': '曹植作', 'type': '+'}]
     #
     #
     def merge(self, source, dist_1, dist_2):
@@ -267,13 +271,12 @@ class merger(object):
         d2._init_diff_matrix_lazy(source, dist_2)
         d2._push_minus_diff_lazy(source, dist_2)
         d2._push_plus_diff_lazy(source, dist_2)
-        print(d1._diff_list)
-        print(d2._diff_list)
+        
         #
         # 创建mergeList
         #
-        source_read = source.split('\n')
-        mergeList = [[] for i in range(0, max(len(d1._diff_list), len(d2._diff_list)))]
+        
+        mergeList = [[] for i in range(0, len(source))]
         #
         # merge patch here
         #
@@ -293,15 +296,14 @@ class merger(object):
             except:
                 pass
 
-        merge_dist_list = [self._truth_table_match(source_read[index], mergeList[index]) for index in range(0, len(source_read))]
-        print(merge_dist_list)
+
+        merge_dist_list = [self._truth_table_match(source[index], mergeList[index]) for index in range(0, len(source))]
+
         dist = ''
         for str_line in merge_dist_list:
-            if str_line == '':
-                dist += '\n\n'
-            else:
-                try:
-                    dist += ('\n').join(str_line)
-                except:
-                    pass
+            try:
+                for str in str_line:
+                    dist += str
+            except:
+                pass
         return dist
