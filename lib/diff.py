@@ -267,8 +267,8 @@ class merger(object):
         d2._init_diff_matrix_lazy(source, dist_2)
         d2._push_minus_diff_lazy(source, dist_2)
         d2._push_plus_diff_lazy(source, dist_2)
-        #print(d1._diff_list)
-        #print(d2._diff_list)
+        print(d1._diff_list)
+        print(d2._diff_list)
         #
         # 创建mergeList
         #
