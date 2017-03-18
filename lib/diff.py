@@ -149,7 +149,7 @@ class differ(object):
     # @ lazy
     #
     # lazydiff调用入口
-    def diff(self, source, dist):
+    def diff(self, source, dist, ifreset=True):
         self._init_diff_list(source, dist)
         self._init_diff_matrix_lazy(source, dist)
         self._push_minus_diff_lazy(source, dist)
@@ -158,7 +158,8 @@ class differ(object):
         answer = []
         for l in self._diff_list:
             answer += l
-        self._reset()
+        if ifreset:
+            self._reset()
         return answer
 
 
@@ -261,16 +262,10 @@ class merger(object):
     def merge(self, source, dist_1, dist_2):
         #生成2个difflist
         d1 = differ()
-        d1._init_diff_list(source, dist_1)
-        d1._init_diff_matrix_lazy(source, dist_1)
-        d1._push_minus_diff_lazy(source, dist_1)
-        d1._push_plus_diff_lazy(source, dist_1)
+        d1.diff(source, dist_1, False)
         #
         d2 = differ()
-        d2._init_diff_list(source, dist_2)
-        d2._init_diff_matrix_lazy(source, dist_2)
-        d2._push_minus_diff_lazy(source, dist_2)
-        d2._push_plus_diff_lazy(source, dist_2)
+        d2.diff(source, dist_2, False)
         
         #
         # 创建mergeList
