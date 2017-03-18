@@ -4,13 +4,13 @@ from .base import BaseHandler
 '''
  #
  #
- # IndexHandler
+ # LoginHandler
  #
  # BaseHandler来自./base.py文件
  #
  #
 '''
 
-class IndexHandler(BaseHandler):
+class LoginHandler(BaseHandler):
     def get(self, template_variables = {}):
-        self.render("index.html")
+        self.render("login.html")

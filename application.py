@@ -18,6 +18,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from lib.loader import Loader
 import handler.index
+import handler.login
 
 
 '''
@@ -34,7 +35,7 @@ class Application(tornado.web.Application):
     def __init__(self):
         settings = dict(
             template_path = os.path.join(os.path.dirname(__file__), "templates"),
-            static_path = os.path.join(os.path.dirname(__file__), "static"),
+            static_path = os.path.join(os.path.dirname(__file__), "templates/static"),
             xsrf_cookies = True,
             cookie_secret = "cookie_secret_code",
             login_url = "/login",
@@ -44,6 +45,7 @@ class Application(tornado.web.Application):
 
         handlers = [
             (r"/", handler.index.IndexHandler),
+            (r"/login", handler.login.LoginHandler),
         ]
 
         tornado.web.Application.__init__(self, handlers, **settings)
