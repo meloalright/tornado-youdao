@@ -1,9 +1,14 @@
 import tornado.web
+import tornado.websocket
 from .base import BaseHandler
 from lib.diff import merger
 
 import json
 import re
+import queue
+
+q = queue.Queue()
+#queue
 
 '''
  #
@@ -26,18 +31,43 @@ class ApiHandler(BaseHandler):
  # @ ApiHeartbeatHandler
 '''
 class ApiHeartbeatHandler(ApiHandler):
+    def get(self):
+        o = q.get()
+        return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': o}))
+
+
+'''
+ # @ ApiPutModifiedHandler
+'''
+class ApiPutModifiedHandler(ApiHandler):
     def post(self):
-        '''
-        m = merger()
-        r = re.compile('(.*?\n)')
-        title = 'melo的笔记'
-        source = r.findall('1.我的笔记主要内容\nmelo的笔记\n')
-        snote = r.findall('1.我的笔记主要内容\nmelo的笔记\nooo\nmmmmm')
-        onote = r.findall(self.get_argument('note') + '\n')
-        print(source) 
-        print(snote) 
-        print(onote) 
-        note = m.merge(source ,snote, onote)
-        '''
-        note = self.get_argument('note')
-        return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {'title': title, 'note': note}}))
+        modified = self.get_argument("modified", {})
+        q.put(modified)
+        return self.write(json.dumps({'code': 200, 'msg': 'success', 'data': {}}))
+
+
+'''
+ # @ EchoWebSocket
+'''
+class EchoWebSocket(tornado.websocket.WebSocketHandler):
+    waiters = set()
+
+    def open(self):
+        EchoWebSocket.waiters.add(self)
+
+    def on_message(self, message):
+        self.write_message(u"You said: " + message)
+        EchoWebSocket.reply(message)
+
+    @classmethod
+    def reply(cls, modified):
+        print(cls.waiters)
+        for waiter in cls.waiters:
+            try:
+                waiter.write_message(modified)
+            except:
+                pass
+
+    def on_close(self):
+        EchoWebSocket.waiters.remove(self)
+        print("WebSocket closed")

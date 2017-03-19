@@ -1,7 +1,7 @@
 <template>
   <div class="root">
     <div class="top-line clearfix">
-      <div class="save-statement" v-on:click="heartbeat()">{{save.statement}}</div>
+      <div class="save-statement" v-on:click="putModified()">{{save.statement}}</div>
     </div>
     <div class="line"></div>
     <input class="youdao-title" v-model="title"/>
@@ -21,7 +21,8 @@ export default {
         statement: '保存'
       },
       title: '无笔记标题',
-      note: '1.我的笔记主要内容\n\n2...'
+      note: '1.我的笔记主要内容\n\n2...',
+      ws: null
     }
   },
   methods: {
@@ -31,21 +32,40 @@ export default {
      * @
      **/
     heartbeat: function () {
-      fetch('http://localhost:8002/api/heartbeat/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: encodeURI('title=' + this.title + '&note=' + this.note)
-      }).then((res) => {
+      fetch('http://localhost:8002/api/heartbeat/').then((res) => {
         return res.json()
       }).then((data) => {
-        this.title = data.data.title
-        this.note = data.data.note
+        console.log(data);
       })
-    }
+    },
+
+    /*
+     * @
+     * @ 提交更改
+     * @
+     **/
+    putModified: function () {
+      this.ws.send(this.note);
+    },
+
+    /*
+     * @
+     * @ init
+     * @
+     **/
+     init: function () {
+      var ws = new WebSocket("ws://localhost:8002/api/ws/echo/");
+      ws.onopen = function() {
+         ws.send("Hello, world");
+      };
+      ws.onmessage = function (evt) {
+         alert(evt.data);
+      };
+      this.ws = ws;
+     }
   },
   beforeMount: function () {
+    this.init();
     //
   }
 }

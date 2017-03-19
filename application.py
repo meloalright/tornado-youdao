@@ -52,6 +52,10 @@ class Application(tornado.web.Application):
             (r"/login", handler.login.LoginHandler),
             (r"/note/", handler.note.NoteHandler),
             (r"/api/heartbeat/", handler.api.ApiHeartbeatHandler),
+            (r"/api/put-modified/", handler.api.ApiPutModifiedHandler),
+            # websocket api
+            (r"/api/ws/echo/", handler.api.EchoWebSocket),
+
         ]
 
         tornado.web.Application.__init__(self, handlers, **settings)
