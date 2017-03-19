@@ -1,7 +1,7 @@
 <template>
   <div class="root">
     <div class="top-line clearfix">
-      <div class="save-statement">{{save.statement}}</div>
+      <div class="save-statement" v-on:click="heartbeat()">{{save.statement}}</div>
     </div>
     <div class="line"></div>
     <input class="youdao-title" v-model="title"/>
@@ -21,8 +21,32 @@ export default {
         statement: '保存'
       },
       title: '无笔记标题',
-      note: '1.我的笔记主要内容\n2.主要内容有...'
+      note: '1.我的笔记主要内容\n\n2...'
     }
+  },
+  methods: {
+    /*
+     * @
+     * @ 获取heartbeat
+     * @
+     **/
+    heartbeat: function () {
+      fetch('http://localhost:8002/api/heartbeat/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: encodeURI('title=' + this.title + '&note=' + this.note)
+      }).then((res) => {
+        return res.json()
+      }).then((data) => {
+        this.title = data.data.title
+        this.note = data.data.note
+      })
+    }
+  },
+  beforeMount: function () {
+    //
   }
 }
 </script>
@@ -87,7 +111,6 @@ export default {
   padding: 0px 0;
   font-size: 14px;
   padding: 10px 0;
-  line-height: 14px;
   text-align: center;
 }
 

@@ -43,9 +43,8 @@ class differ(object):
     # 初始化diff逻辑字符串列表
     # NOT BLACK BOX
     def _init_diff_list(self, source, dist):
-        ls = source
-        size = len(ls)
-        self._diff_list = [[] for i in range(0, size)]
+        size = len(source)
+        self._diff_list = [[] for i in range(0, size + 1)]
 
 
     # 初始化diff矩阵
@@ -275,6 +274,9 @@ class merger(object):
         #
         # merge patch here
         #
+        print(d1._diff_list)
+        print(d2._diff_list)
+
         for i in range(0, len(mergeList)):
             ''''''
             try:

@@ -14,11 +14,14 @@ from tornado.options import define, options
 import datetime
 import sqlite3
 
+
 from jinja2 import Environment, FileSystemLoader
 
 from lib.loader import Loader
 import handler.index
 import handler.login
+import handler.note
+import handler.api
 
 
 '''
@@ -28,15 +31,16 @@ import handler.login
  #
  #
 '''
-define("port", default=8080, help="run on the given port", type=int)
+define("port", default=8002, help="run on the given port", type=int)
 
 
 class Application(tornado.web.Application):
     def __init__(self):
         settings = dict(
             template_path = os.path.join(os.path.dirname(__file__), "templates"),
-            static_path = os.path.join(os.path.dirname(__file__), "templates/static"),
-            xsrf_cookies = True,
+            static_path = os.path.join(os.path.dirname(__file__), "templates/spa/static"),
+            #xsrf_cookies = True,
+            xsrf_cookies = False,
             cookie_secret = "cookie_secret_code",
             login_url = "/login",
             autoescape = None,
@@ -46,6 +50,8 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", handler.index.IndexHandler),
             (r"/login", handler.login.LoginHandler),
+            (r"/note/", handler.note.NoteHandler),
+            (r"/api/heartbeat/", handler.api.ApiHeartbeatHandler),
         ]
 
         tornado.web.Application.__init__(self, handlers, **settings)

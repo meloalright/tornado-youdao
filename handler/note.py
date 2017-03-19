@@ -13,4 +13,4 @@ from .base import BaseHandler
 
 class NoteHandler(BaseHandler):
     def get(self, template_variables = {}):
-        self.render("note.html")
+        self.render("spa/index.html")

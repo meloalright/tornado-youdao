@@ -1,2 +1,2 @@
-rm -rf templates
-cp -rf my-project/dist templates
+rm -rf templates/spa
+cp -rf my-project/dist templates/spa
