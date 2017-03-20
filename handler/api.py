@@ -60,7 +60,6 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
 
     def open(self, room_id):
         self.room = room_id
-        #EchoWebSocket.waiters.add(self)
         try:
             EchoWebSocket.waitersHash[room_id].add(self)
         except:
@@ -74,8 +73,6 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
     @classmethod
     def reply(cls, modified, publisher):
 
-        print(cls.waitersHash)
-
         room_id = publisher.room
         waiters = cls.waitersHash[room_id]
 
@@ -88,6 +85,5 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         room_id = self.room
-        print('close{id}'.format(id=room_id))
 
         EchoWebSocket.waitersHash[room_id].remove(self)
