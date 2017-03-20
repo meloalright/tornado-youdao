@@ -56,30 +56,38 @@ class ApiPutModifiedHandler(ApiHandler):
 '''
 class EchoWebSocket(tornado.websocket.WebSocketHandler):
     waiters = set()
+    waitersHash = {}
 
-    def open(self):
-        self.room = '130'
-        EchoWebSocket.waiters.add(self)
+    def open(self, room_id):
+        self.room = room_id
+        #EchoWebSocket.waiters.add(self)
+        try:
+            EchoWebSocket.waitersHash[room_id].add(self)
+        except:
+            EchoWebSocket.waitersHash[room_id] = set()
+            EchoWebSocket.waitersHash[room_id].add(self)
 
     def on_message(self, message):
-        #self.write_message(u"You said: " + message)
         publisher = self
-        publisher.room = '147'
-        #EchoWebSocket.waiters.remove(self)
-        #EchoWebSocket.waiters.add(publisher)
-
         EchoWebSocket.reply(message, publisher)
 
     @classmethod
     def reply(cls, modified, publisher):
-        print(cls.waiters)
-        for waiter in cls.waiters:
+
+        print(cls.waitersHash)
+
+        room_id = publisher.room
+        waiters = cls.waitersHash[room_id]
+
+        for waiter in waiters:
             try:
-                if waiter is not publisher and waiter.room == '147':
+                if waiter is not publisher and waiter.room == publisher.room:
                     waiter.write_message(modified)
             except:
                 pass
 
     def on_close(self):
-        EchoWebSocket.waiters.remove(self)
-        #print("WebSocket closed")
+        room_id = self.room
+        print('close{id}'.format(id=room_id))
+
+        EchoWebSocket.waitersHash[room_id].remove(self)

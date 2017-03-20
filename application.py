@@ -50,11 +50,11 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", handler.index.IndexHandler),
             (r"/login", handler.login.LoginHandler),
-            (r"/note/", handler.note.NoteHandler),
+            (r"/spa/(.*)/", handler.note.NoteHandler),
             (r"/api/heartbeat/", handler.api.ApiHeartbeatHandler),
             (r"/api/put-modified/", handler.api.ApiPutModifiedHandler),
             # websocket api
-            (r"/api/ws/echo/", handler.api.EchoWebSocket),
+            (r"/api/ws/echo/(.*)", handler.api.EchoWebSocket),
 
         ]
 
