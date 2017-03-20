@@ -56,7 +56,7 @@ export default {
      init: function () {
       var ws = new WebSocket("ws://localhost:8002/api/ws/echo/");
       ws.onopen = function() {
-         ws.send("Hello, world");
+         //ws.send("Hello, world");
       };
       ws.onmessage = function (evt) {
          alert(evt.data);

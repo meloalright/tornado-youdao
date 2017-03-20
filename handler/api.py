@@ -6,6 +6,11 @@ from lib.diff import merger
 import json
 import re
 import queue
+import redis
+
+#conn = redis.Redis(host='127.0.0.1', port=6379)
+#conn.set('147', 1)
+#/usr/local/bin/redis-server /etc/redis.conf
 
 q = queue.Queue()
 #queue
@@ -53,21 +58,28 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
     waiters = set()
 
     def open(self):
+        self.room = '130'
         EchoWebSocket.waiters.add(self)
 
     def on_message(self, message):
-        self.write_message(u"You said: " + message)
-        EchoWebSocket.reply(message)
+        #self.write_message(u"You said: " + message)
+        publisher = self
+        publisher.room = '147'
+        #EchoWebSocket.waiters.remove(self)
+        #EchoWebSocket.waiters.add(publisher)
+
+        EchoWebSocket.reply(message, publisher)
 
     @classmethod
-    def reply(cls, modified):
+    def reply(cls, modified, publisher):
         print(cls.waiters)
         for waiter in cls.waiters:
             try:
-                waiter.write_message(modified)
+                if waiter is not publisher and waiter.room == '147':
+                    waiter.write_message(modified)
             except:
                 pass
 
     def on_close(self):
         EchoWebSocket.waiters.remove(self)
-        print("WebSocket closed")
+        #print("WebSocket closed")

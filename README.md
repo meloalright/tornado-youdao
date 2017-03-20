@@ -15,3 +15,8 @@
     query.py = 手写的ORM
     (application=>pysqlite3=>conn=>orm)
 ```
+      
+      
+      
+`redis`   
+`/usr/local/bin/redis-server /etc/redis.conf`
