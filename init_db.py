@@ -1,6 +1,7 @@
 #init_db.py
 from lib.query import Query
 from model.user import UserModel
+from model.note import NoteModel
 import sqlite3
 import redis
 
@@ -41,7 +42,23 @@ class initDbModel(Query):
         '''
         um = UserModel(sqlite3.connect('db/youdao.db'))
         um.sign_up_object('melo', 'redorgreen@sina.cn', '999999')
-        print(um.valid_password('melo', '999999'))
+        print(um.valid_user('mez', '123456'))
+        print(um.valid_user('melo', '123456'))
+        print(um.valid_user('melo', '999999'))
+        user = um.valid_user('melo', '999999')
+        um.update_password(user['id'], '000000')
+        print(um.valid_user('melo', '000000'))
+
+        nm = NoteModel(sqlite3.connect('db/youdao.db'))
+        nm.create_note_object('melo \'s first note', 1, 1, 'This is melo \'s first note')
+        nm.create_note_object('melo \'s second note', 1, 1, 'This is melo \'s second note')
+        nm.set_common(0)
+        nm.set_common(1)
+        nm.update_note(1, 'Melo \'s first note', 'This is melo \'s first note yeah')
+        print(nm.get_note(1))
+        print(nm.get_note(2))
+        print(um.get_user_note_list(1))
+
 
 #init
 i = initDbModel()

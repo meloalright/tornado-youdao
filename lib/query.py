@@ -28,8 +28,13 @@ class Query(object):
         return list(self.db.execute("SELECT * FROM {table} {filt}".format(table=self.table_name, filt=filt)))
 
     def select_one(self, filt=''):
-        return list(self.db.execute("SELECT * FROM {table} {filt}".format(table=self.table_name, filt=filt)))[0]
+        try:
+            return list(self.db.execute("SELECT * FROM {table} {filt}".format(table=self.table_name, filt=filt)))[0]
+        except:
+            return None
 
+    def execute(self, sup):
+        return list(self.db.execute(sup))
 
     def update(self, set_filt=''):
         self.db.execute("UPDATE {table} {set_filt}".format(table=self.table_name, set_filt=set_filt))
