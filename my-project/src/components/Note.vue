@@ -220,7 +220,7 @@ export default {
       var that = this;
       var re = RegExp('/spa/(.*)?/#/note/')
       var room = location.href.match(re)[1];
-      var ws = new WebSocket("ws://10.0.119.120:8002/api/ws/echo/" + room);
+      var ws = new WebSocket("ws://localhost:8002/api/ws/echo/" + room);
       var wsmsg;
       ws.onopen = function() {
          //ws.send("Hello, world");
