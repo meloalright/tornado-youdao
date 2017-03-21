@@ -1,6 +1,10 @@
 #init_db.py
 from lib.query import Query
+from model.user import UserModel
 import sqlite3
+import redis
+
+conn = redis.Redis(host='127.0.0.1', port=6379)
 
 class initDbModel(Query):
     def __init__(self):
@@ -12,31 +16,32 @@ class initDbModel(Query):
         self.table_name = 'user'
         self.db.execute("DROP TABLE IF EXISTS USER");
         self.db.execute('''CREATE TABLE USER
-                   (ID  INT PRIMARY KEY    NOT NULL,
+                   (ID  integer PRIMARY KEY autoincrement,
                     NAME           TEXT    NOT NULL,
                     EMAIL          TEXT    NOT NULL,
                     PASSWORD       TEXT    NOT NULL);
                    ''')
 
-        self.add(1, 'ADMIN' , 'redorgreen@sina.cn', 'admin')
 
     def init_note_db(self):
         self.table_name = 'note'
         self.db.execute("DROP TABLE IF EXISTS NOTE");
         self.db.execute('''CREATE TABLE NOTE
-                   (ID  INT PRIMARY KEY    NOT NULL,
+                   (ID  integer PRIMARY KEY autoincrement,
                     NAME           TEXT    NOT NULL,
                     AUTHOR         INT     NOT NULL,
                     ISCOMMON       INT     NOT NULL,
                     SUB        CHAR(1000));
                    ''')
 
-        self.add(1, 'YOUDAO-READEME' , 1, 1, 'YOUDAO-README.')
 
     def test_init(self):
-        self.table_name = 'user'
-        print('The first note\'s sub is equal = {sub}'.format(sub = self.select('JOIN NOTE WHERE AUTHOR = 1')[0][8]))
-
+        '''
+         model test
+        '''
+        um = UserModel(sqlite3.connect('db/youdao.db'))
+        um.sign_up_object('melo', 'redorgreen@sina.cn', '999999')
+        print(um.valid_password('melo', '999999'))
 
 #init
 i = initDbModel()
@@ -47,6 +52,6 @@ i.init_note_db()
 
 i.test_init()
 # >>  python3 init_db.py
-# The first note's sub is equal = YOUDAO-README.
+
 
 

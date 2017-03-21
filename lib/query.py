@@ -19,14 +19,16 @@ class Query(object):
     def __close(self):
         pass
 
-    def add(self, *args):
-        values = args
-        self.db.execute("INSERT INTO {table} VALUES {kwarg}".format(table=self.table_name, kwarg=values))
-        self.db.commit()
 
+    def add(self, sup):
+        self.db.execute("INSERT INTO {table} {sup}".format(table=self.table_name, sup=sup))
+        self.db.commit()
 
     def select(self, filt=''):
         return list(self.db.execute("SELECT * FROM {table} {filt}".format(table=self.table_name, filt=filt)))
+
+    def select_one(self, filt=''):
+        return list(self.db.execute("SELECT * FROM {table} {filt}".format(table=self.table_name, filt=filt)))[0]
 
 
     def update(self, set_filt=''):

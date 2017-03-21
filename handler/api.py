@@ -32,6 +32,21 @@ class ApiHandler(BaseHandler):
         self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
 
 
+
+'''
+ # @ ApiSignupHandler
+'''
+class ApiSignupHandler(ApiHandler):
+    def post(self):
+
+        return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {}}))
+
+
+
+
+
+
+
 '''
  # @ ApiHeartbeatHandler
 '''
