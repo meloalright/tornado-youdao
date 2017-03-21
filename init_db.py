@@ -40,7 +40,7 @@ class initDbModel(Query):
         '''
          model test
         '''
-        um = UserModel(sqlite3.connect('db/youdao.db'))
+        um = UserModel(self.db)
         um.sign_up_object('melo', 'redorgreen@sina.cn', '999999')
         print(um.valid_user('mez', '123456'))
         print(um.valid_user('melo', '123456'))
@@ -49,7 +49,7 @@ class initDbModel(Query):
         um.update_password(user['id'], '000000')
         print(um.valid_user('melo', '000000'))
 
-        nm = NoteModel(sqlite3.connect('db/youdao.db'))
+        nm = NoteModel(self.db)
         nm.create_note_object('melo \'s first note', 1, 1, 'This is melo \'s first note')
         nm.create_note_object('melo \'s second note', 1, 1, 'This is melo \'s second note')
         nm.set_common(0)

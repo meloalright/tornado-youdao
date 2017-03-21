@@ -10,8 +10,16 @@ class UserModel(Query):
 
 
     def sign_up_object(self, name, email, password):
+        #check unique
+        ncur = self.select_one('WHERE NAME = "{name}"'.format(name=name))
+        ecur = self.select_one('WHERE EMAIL = "{email}"'.format(email=email))
+        if ncur is not None or ecur is not None:
+            return False
+
         hash_password = gen_hash(password)
         self.add('(NAME, EMAIL, PASSWORD) VALUES ("{name}", "{email}", "{password}")'.format(name=name, email=email, password=hash_password))
+        return True
+
 
     def update_password(self, id, password):
         hash_password = gen_hash(password)
@@ -35,5 +43,15 @@ class UserModel(Query):
 
     def get_user_note_list(self, id):
         cur = self.execute('SELECT T2.ID, T2.NAME, T2.ISCOMMON FROM {table} AS T1 JOIN NOTE AS T2 ON T1.ID = T2.AUTHOR WHERE T2.AUTHOR = {id}'.format(table=self.table_name, id=id))
-        olist = [{'id': o[0], 'name': o[1], 'iscommon': o[2]} for o in cur]
+        if cur is []:
+            olist = []
+        else:
+            olist = [{'id': o[0], 'name': o[1], 'iscommon': o[2]} for o in cur]
         return olist
+
+    def has_this_note(self, uid, nid):
+        cur = self.execute('SELECT * FROM {table} AS T1 JOIN NOTE AS T2 ON T1.ID = T2.AUTHOR WHERE T1.ID = {uid} AND T2.ID = {nid}'.format(table=self.table_name, uid=uid, nid=nid))
+        if cur == []:
+            return False
+        else:
+            return True

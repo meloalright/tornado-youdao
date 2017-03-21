@@ -34,17 +34,43 @@ class ApiHandler(BaseHandler):
 
 
 '''
- # @ ApiSignupHandler
+ # @ ApiHeartbeatHandler
 '''
-class ApiSignupHandler(ApiHandler):
+class ApiNewNoteHandler(ApiHandler):
     def post(self):
+        #redis get id
+        sessid = self.get_secure_cookie('sessid').decode()
+        id = sessid
+        if id:
+            nm = self.note_model()
+            nm.create_note_object('No title yet', id, 1, 'Create your note here.')
+            return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {}}))
+        else:
+            return self.write(json.dumps({'code': 1, 'msg': 'error', 'data': {}}))
 
-        return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {}}))
 
+'''
+ # @ ApiHeartbeatHandler
+'''
+class ApiDeleteNoteHandler(ApiHandler):
+    def post(self):
+        hash_id = self.get_argument("hash_id", None)
+        #reverse hash
+        nid = hash_id
+        #redis get id
+        sessid = self.get_secure_cookie('sessid').decode()
+        uid = sessid
+        if nid and uid:
+            um = self.user_model()
+            if um.has_this_note(uid, nid):
+                nm = self.note_model()
+                nm.delete_note(nid)
+                return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {}}))
+            else:
+                return self.write(json.dumps({'code': 2, 'msg': 'no permission', 'data': {}}))
 
-
-
-
+        else:
+            return self.write(json.dumps({'code': 1, 'msg': 'error', 'data': {}}))
 
 
 '''
@@ -52,8 +78,18 @@ class ApiSignupHandler(ApiHandler):
 '''
 class ApiHeartbeatHandler(ApiHandler):
     def post(self):
-        pass
-        return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {}}))
+        hash_id = self.get_argument("hash_id", None)
+        #reverse hash
+        id = hash_id
+        name = self.get_argument("name", None)
+        sub = self.get_argument("sub", None)
+
+        if name and sub:
+            nm = self.note_model()
+            nm.update_note(id, name, sub)
+            return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {}}))
+        else:
+            return self.write(json.dumps({'code': 1, 'msg': 'faild', 'data': {}}))
 
 
 

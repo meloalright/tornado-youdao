@@ -15,3 +15,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def user_model(self):
         return self.application.user_model
+
+
+    def note_model(self):
+        return self.application.note_model

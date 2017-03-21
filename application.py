@@ -22,6 +22,7 @@ import handler.index
 import handler.login
 import handler.note
 import handler.api
+import handler.usi
 
 
 '''
@@ -51,6 +52,17 @@ class Application(tornado.web.Application):
             (r"/", handler.index.IndexHandler),
             (r"/login", handler.login.LoginHandler),
             (r"/spa/(.*)/", handler.note.NoteHandler),
+            # signup
+            (r"/api/signup/", handler.usi.UsiSignupHandler),
+            # login
+            (r"/api/login/", handler.usi.UsiLoginHandler),
+            # get_note_list
+            (r"/api/note-list/", handler.usi.UsiGetNoteListHandler),
+
+            # new api
+            (r"/api/new-note/", handler.api.ApiNewNoteHandler),
+            # delete api
+            (r"/api/delete-note/", handler.api.ApiDeleteNoteHandler),
             #save api
             (r"/api/heartbeat/", handler.api.ApiHeartbeatHandler),
             # websocket api
@@ -65,7 +77,7 @@ class Application(tornado.web.Application):
 
         self.loader = Loader(self.db)
         self.user_model = self.loader.use("user.model")
-
+        self.note_model = self.loader.use("note.model")
 
 
 
