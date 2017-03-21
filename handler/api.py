@@ -102,7 +102,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
             except:
                 pass
             #在线者
-            onlines.append(waiter.name)
+            #onlines.append(waiter.name)
 
         #把在线者返回
         '''

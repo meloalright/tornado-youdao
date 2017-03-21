@@ -13,4 +13,5 @@ from .base import BaseHandler
 
 class NoteHandler(BaseHandler):
     def get(self, template_variables = {}):
+        self.set_cookie("nick", "##melo##")
         self.render("spa/index.html")

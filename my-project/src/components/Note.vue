@@ -223,7 +223,7 @@ export default {
       var ws = new WebSocket("ws://localhost:8002/api/ws/echo/" + room);
       var wsmsg;
       ws.onopen = function() {
-         //ws.send("Hello, world");
+         ws.send(JSON.stringify({'type': 'cookie', 'mycookie': document.cookie}));
       };
       ws.onmessage = function (evt) {
         wsmsg = JSON.parse(evt.data);
@@ -232,6 +232,10 @@ export default {
         }
         else if (wsmsg.type === '-') {
           that.cutAtCaret(wsmsg.range, wsmsg.pos)
+        }
+        //拿到的是cookie
+        else if (wsmsg.type === 'cookie') {
+          console.log(wsmsg.mycookie.match(RegExp('.*?nick=##(.*?)##.*?'))[1]);
         }
       };
       this.ws = ws;
