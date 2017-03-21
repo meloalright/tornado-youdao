@@ -68,6 +68,32 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         publisher = self
+        #EchoWebSocket.reply(message, publisher)
+        EchoWebSocket.put_queue(message, publisher)
+        EchoWebSocket.run_queue()
+
+    @classmethod
+    def run_queue(cls):
+        while True:
+            if not q.empty():
+                EchoWebSocket.pop_queue()
+            else:
+                break
+
+
+    @classmethod
+    def put_queue(cls, modified, publisher):
+        q.put({
+            'modified': modified,
+            'publisher': publisher
+        })
+
+
+    @classmethod
+    def pop_queue(cls):
+        o = q.get()
+        message = o['modified']
+        publisher = o['publisher']
         EchoWebSocket.reply(message, publisher)
 
     @classmethod
