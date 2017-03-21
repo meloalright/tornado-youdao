@@ -51,8 +51,8 @@ class Application(tornado.web.Application):
             (r"/", handler.index.IndexHandler),
             (r"/login", handler.login.LoginHandler),
             (r"/spa/(.*)/", handler.note.NoteHandler),
+            #save api
             (r"/api/heartbeat/", handler.api.ApiHeartbeatHandler),
-            (r"/api/put-modified/", handler.api.ApiPutModifiedHandler),
             # websocket api
             (r"/api/ws/echo/(.*)", handler.api.EchoWebSocket),
 

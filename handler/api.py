@@ -36,19 +36,10 @@ class ApiHandler(BaseHandler):
  # @ ApiHeartbeatHandler
 '''
 class ApiHeartbeatHandler(ApiHandler):
-    def get(self):
-        o = q.get()
-        return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': o}))
-
-
-'''
- # @ ApiPutModifiedHandler
-'''
-class ApiPutModifiedHandler(ApiHandler):
     def post(self):
-        modified = self.get_argument("modified", {})
-        q.put(modified)
-        return self.write(json.dumps({'code': 200, 'msg': 'success', 'data': {}}))
+        pass
+        return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {}}))
+
 
 
 '''
@@ -58,8 +49,9 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
     waiters = set()
     waitersHash = {}
 
-    def open(self, room_id):
+    def open(self, room_id):#, nick_name):
         self.room = room_id
+        ##self.name = nick_name
         try:
             EchoWebSocket.waitersHash[room_id].add(self)
         except:
@@ -101,6 +93,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
 
         room_id = publisher.room
         waiters = cls.waitersHash[room_id]
+        onlines = []
 
         for waiter in waiters:
             try:
@@ -108,6 +101,17 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
                     waiter.write_message(modified)
             except:
                 pass
+            #在线者
+            onlines.append(waiter.name)
+
+        #把在线者返回
+        '''
+        waiter.write_message({
+            'type': 'online',
+            'onlines': onlines
+        })
+        '''
+
 
     def on_close(self):
         room_id = self.room
