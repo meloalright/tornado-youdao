@@ -2,6 +2,7 @@ import tornado.web
 import tornado.websocket
 from .base import BaseHandler
 import json
+import random
 import re
 
 
@@ -46,15 +47,28 @@ class UsiLoginHandler(UsiHandler):
         if name and password:
             um = self.user_model()
             user = um.valid_user(name, password)
-            try:
+            if user:
                 nickname = user['name']
-                self.set_cookie('nick', '##{nickname}##'.format(nickname=nickname))
+                redis_hash_id = str(user['id']) + random.choice('OA_2954@3S#1cWA')
+                self.set_secure_cookie('sessid', redis_hash_id, expires_days=1)
+                self.set_secure_cookie('nick', '{nickname}'.format(nickname=nickname), expires_days=1)
                 return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': user}))
 
-            except:
+            else:
                 return self.write(json.dumps({'code': 1, 'msg': 'not valid', 'data': {}}))
         else:
             return self.write(json.dumps({'code': 2, 'msg': 'bad form', 'data': {}}))
+
+
+
+'''
+ # @ UsiLoginHandler
+'''
+class UsiLogoutHandler(UsiHandler):
+    def post(self):
+        self.clear_cookie('sessid')
+        self.clear_cookie('nick')
+        return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {}}))
 
 
 

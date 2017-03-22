@@ -14,6 +14,7 @@ from tornado.options import define, options
 import datetime
 import sqlite3
 
+import redis
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -61,6 +62,8 @@ class Application(tornado.web.Application):
             (r"/api/signup/", handler.usi.UsiSignupHandler),
             # login
             (r"/api/login/", handler.usi.UsiLoginHandler),
+            # logout
+            (r"/api/logout/", handler.usi.UsiLogoutHandler),
             # get_note_list
             (r"/api/note-list/", handler.usi.UsiGetNoteListHandler),
 
