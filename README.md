@@ -19,4 +19,13 @@
       
       
 `redis`   
-`/usr/local/bin/redis-server /etc/redis.conf`
+`/usr/local/bin/redis-server /etc/redis.conf`   
+   
+`base64 => cvt64`   
+```python
+>>> from lib.cvt64 import *
+>>> encvt64(1)
+'MQ=='
+>>> decvt64('MQ==')
+1
+```

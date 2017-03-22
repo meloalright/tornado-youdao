@@ -1,0 +1,5 @@
+{{note_list}}
+
+{% for note in note_list %}
+<a href="/spa/{{note['base64']}}/#/note/">{{note['base64']}}</a>
+{% end %}

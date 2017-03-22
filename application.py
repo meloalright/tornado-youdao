@@ -18,9 +18,12 @@ import sqlite3
 from jinja2 import Environment, FileSystemLoader
 
 from lib.loader import Loader
+
 import handler.index
 import handler.signup
+import handler.home
 import handler.note
+
 import handler.api
 import handler.usi
 
@@ -51,6 +54,7 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", handler.index.IndexHandler),
             (r"/signup/", handler.signup.SignupHandler),
+            (r"/home/", handler.home.HomeHandler),
 
             (r"/spa/(.*)/", handler.note.NoteHandler),
             # signup

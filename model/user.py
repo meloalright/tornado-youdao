@@ -1,5 +1,8 @@
 from lib.query import Query
 from lib.security import gen_hash, check
+from lib.cvt64 import *
+
+import base64
 
 class UserModel(Query):
     def __init__(self, db):
@@ -46,7 +49,10 @@ class UserModel(Query):
         if cur is []:
             olist = []
         else:
-            olist = [{'id': o[0], 'name': o[1], 'iscommon': o[2]} for o in cur]
+            '''
+            >> int => str => bytes => base64-bytes => str
+            '''
+            olist = [{'id': o[0], 'base64': encvt64(o[0]) , 'name': o[1], 'iscommon': o[2]} for o in cur]
         return olist
 
     def has_this_note(self, uid, nid):
