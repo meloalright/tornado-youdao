@@ -1,1 +1,106 @@
-signup
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tornado-youdao</title>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/twitter-bootstrap/2.2.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="http://www.bootcss.com/p/flat-ui/css/flat-ui.css">
+    <style type="text/css">
+        .align-center {
+            text-align: center;
+        }
+        .auto-240 {
+            margin: 0 auto;
+            max-width: 240px;
+        }
+    </style>
+</head>
+<body>
+    <div class="align-center">
+        <h1 class="demo-logo">
+            <div class="logo"></div>
+            Sign up
+            <small>注册新用户</small>
+        </h1>
+    </div>
+    <div class="form">
+        <div class="align-center">
+          <div class="login-form">
+            <div class="control-group">
+              <input type="text" class="login-field" value="" placeholder="Enter your name" id="name">
+            </div>
+            <div class="control-group">
+              <input type="text" class="login-field" value="" placeholder="Enter your email" id="email">
+            </div>
+            <div class="control-group">
+              <input type="password" class="login-field" value="" placeholder="Password" id="pass">
+            </div>
+            <a class="btn btn-large btn-block btn-info auto-240" id="signup">Sign up</a>
+            <a class="btn btn-large btn-block auto-240" href="/">I have account</a>
+          </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            var fn = {
+                bind: function () {
+                    var that = this;
+                    var name = $('#name');
+                    var email = $('#email');
+                    var pass = $('#pass');
+                    var signup = $('#signup');
+
+                    signup.on('click', function () {
+
+                        if (!that.check(name.val(), email.val(), pass.val())) {
+                            return false;
+                        }
+
+                        $.ajax('/api/signup/', {
+                            type:'POST',
+                            dataType: 'JSON',
+                            data: { 
+                                name: name.val(),
+                                email: email.val(),
+                                password: pass.val()
+                            },
+                            success: function (res) {
+                                console.log(res);
+                                if (res.code === 200 || res.code === '200') {
+                                    location.href = '/';
+                                }
+                                else {
+                                    name.parent().addClass('error');
+                                    email.parent().addClass('error');
+                                    pass.parent().addClass('error');
+                                }
+                            }
+                        });
+                    });
+                },
+                check: function (name, email, pass) {
+                    if (name.length < 1) {
+                        console.log('name failed')
+                        return false;
+                    }
+
+                    if (!email.match(/(.*)@(.*)\.(.*)/)) {
+                        console.log('email failed')
+                        return false;
+                    }
+                    if (pass.length < 6) {
+                        console.log('pass failed')
+                        return false;
+                    }
+
+                    return true;
+                }
+            };
+
+            //bind
+            fn.bind();
+
+        })()
+    </script>
+</body>
+</html>

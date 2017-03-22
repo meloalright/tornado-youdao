@@ -19,7 +19,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from lib.loader import Loader
 import handler.index
-import handler.login
+import handler.signup
 import handler.note
 import handler.api
 import handler.usi
@@ -50,7 +50,8 @@ class Application(tornado.web.Application):
 
         handlers = [
             (r"/", handler.index.IndexHandler),
-            (r"/login", handler.login.LoginHandler),
+            (r"/signup/", handler.signup.SignupHandler),
+
             (r"/spa/(.*)/", handler.note.NoteHandler),
             # signup
             (r"/api/signup/", handler.usi.UsiSignupHandler),
