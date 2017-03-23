@@ -1,12 +1,13 @@
 <template>
   <div class="root">
-    <div class="top-line clearfix">
+    <div class="top-line clearfix short">
+      <p class="online-statement">正在协同编辑的用户数: {{onlines}}人</p>
       <div class="save-statement" v-on:click="saves(()=>{})">{{save.statement}}</div>
     </div>
-    <div class="line"></div>
-    <input class="youdao-title" v-model="title"/>
-    <div class="line"></div>
-    <div class="note-wrapper">
+    <div class="line short"></div>
+    <div class="short"><input class="youdao-title" v-model="title"/></div>
+    <div class="line short"></div>
+    <div class="note-wrapper short">
       <textarea v-model="note" class="youdao-note" id="youdao-note" v-on:keydown="saveLocalState()"  v-on:input="sendLocalModified()"></textarea>
     </div>
   </div>
@@ -20,6 +21,7 @@ export default {
       save: {
         statement: 'SAVE'
       },
+      onlines: '1',
       title: 'NOTITLE',
       note: '1.Create your note here',
       history:{
@@ -51,8 +53,8 @@ export default {
       var that = this;
       var re = RegExp('/spa/(.*)?/#/note/')
       var room = location.href.match(re)[1];
+      this.save.statement = 'SAVING...';
 
-      cb();
 
       fetch('http://localhost:8002/api/heartbeat/', {
         method: 'POST',
@@ -61,11 +63,13 @@ export default {
         },
         body: encodeURI('hash_id=' + room + '&name=' + that.title + '&sub=' + that.note + '\n'/*每一行都有换行符*/)
       }).then((res) => {
-        if (res.code === 200 || res.code === '200') {
+        return res.json()
+      }).then((data) => {
+        if (data.code === 200 || data.code === '200') {
           // 重置
-          that.save.statement = 'SAVING';
-          console.log('保存');
-          setTimeout(() => {that.save.statement = 'SAVE';}, 2000);
+          cb();
+          setTimeout(() => {that.save.statement = 'SAVE';}, 1000);
+
           // 再拉新请求
           //setTimeout(that.heartbeat, 10000)
         }
@@ -266,8 +270,8 @@ export default {
           that.cutAtCaret(wsmsg.range, wsmsg.pos)
         }
         //拿到的是cookie
-        else if (wsmsg.type === 'cookie') {
-          console.log(wsmsg.mycookie.match(RegExp('.*?nick=##(.*?)##.*?'))[1]);
+        else if (wsmsg.type === 'onlines') {
+          that.onlines = wsmsg.count;
         }
       };
       this.ws = ws;
@@ -301,8 +305,21 @@ export default {
 
 .root .top-line .save-statement:hover {
   color: #41b883;
+  border: solid 1px #41b883;
 }
 
+.root .top-line .save-statement:active {
+  background-color: #41b883;
+  border: solid 1px #FFF;
+  color: #FFF;
+}
+.root .top-line .online-statement {
+  color: #CCC;
+  float: left;
+  margin: 20px 0 0 5px;
+  font-size: 16px;
+  line-height: 20px;
+}
 .root .top-line .save-statement {
   margin: 10px 20px 0 10px;
   border: solid 1px #EEE;
@@ -312,7 +329,7 @@ export default {
   cursor: pointer;
   padding: 0 10px;
   float: right;
-  color: #777;
+  color: #CCC;
 }
 
 .root .line {
@@ -322,14 +339,18 @@ export default {
   background-color: #EEE;
 }
 
+.root .short {
+  margin: 0 10%;
+}
 .root .youdao-title {
+  font-weight: bolder;
   text-align: center;
   margin: 10px auto;
   line-height: 30px;
   font-size: 30px;
-  color: #2c3e50;
   outline: none;
   border: none;
+  color: #333;
 }
 
 .root .note-wrapper {
@@ -338,6 +359,7 @@ export default {
 
 
 .root .note-wrapper .youdao-note {
+  color: #333;
   width: 100%;
   border: none;
   resize: none;
@@ -345,7 +367,6 @@ export default {
   height: 900px;
   outline: none;
   display: block;
-  color: #2c3e50;
   padding: 0px 0;
   font-size: 14px;
   padding: 10px 0;

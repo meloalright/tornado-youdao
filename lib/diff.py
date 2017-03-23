@@ -154,7 +154,6 @@ class differ(object):
         self._init_diff_matrix_lazy(source, dist)
         self._push_minus_diff_lazy(source, dist)
         self._push_plus_diff_lazy(source, dist)
-        print(2)
 
         highlight = []
         for index in range(0, len(self._diff_list)):

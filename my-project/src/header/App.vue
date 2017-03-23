@@ -1,12 +1,12 @@
 <template>
-  <div id="header">
+  <div id="vueheader">
     <router-view keep-alive></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'header'
+  name: 'vueheader'
 }
 </script>
 

@@ -42,7 +42,7 @@ class ApiNewNoteHandler(ApiHandler):
         id = self.redis_object().get(sessid).decode()
         if id:
             nm = self.note_model()
-            nm.create_note_object('我的笔记', id, 1, '这个文档是不支持中文多人协同编辑的\n但是是支持中文的版本记录\n')
+            nm.create_note_object('No title yet', id, 1, 'Create your note here.')
             return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {}}))
         else:
             return self.write(json.dumps({'code': 1, 'msg': 'error', 'data': {}}))
@@ -154,9 +154,11 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
 
         try:
             EchoWebSocket.waitersHash[room_id].add(self)
+            EchoWebSocket.send_onlines(room_id)
         except:
             EchoWebSocket.waitersHash[room_id] = set()
             EchoWebSocket.waitersHash[room_id].add(self)
+            EchoWebSocket.send_onlines(room_id)
 
     def on_message(self, message):
         publisher = self
@@ -189,16 +191,29 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
         EchoWebSocket.reply(message, publisher)
 
     @classmethod
+    def send_onlines(cls, room_id):
+        waiters = cls.waitersHash[room_id]
+        count = len(list(waiters))
+        for waiter in waiters:
+            try:
+                if waiter is not None and waiter.room == room_id:
+                    waiter.write_message({'type': 'onlines', 'count': count})
+
+            except:
+                pass
+
+
+    @classmethod
     def reply(cls, modified, publisher):
 
         room_id = publisher.room
         waiters = cls.waitersHash[room_id]
-        onlines = []
-
+        #onlines = []
         for waiter in waiters:
             try:
                 if waiter is not publisher and waiter.room == publisher.room:
                     waiter.write_message(modified)
+
             except:
                 pass
             #在线者
@@ -221,3 +236,5 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
         room_id = self.room
 
         EchoWebSocket.waitersHash[room_id].remove(self)
+        EchoWebSocket.send_onlines(room_id)
+

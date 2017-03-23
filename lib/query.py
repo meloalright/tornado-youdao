@@ -37,7 +37,6 @@ class Query(object):
         return list(self.db.execute(sup))
 
     def update(self, set_filt=''):
-        print("UPDATE {table} {set_filt}".format(table=self.table_name, set_filt=set_filt))
 
         self.db.execute("UPDATE {table} {set_filt}".format(table=self.table_name, set_filt=set_filt))
         self.db.commit()

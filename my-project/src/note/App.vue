@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="../assets/logo.png">
+    <img src="http://www.bootcss.com/p/flat-ui/images/demo/logo-mask.png">
     <router-view keep-alive></router-view>
   </div>
 </template>

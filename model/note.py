@@ -39,8 +39,6 @@ class NoteModel(Query):
             r = re.compile(r'(.*\n)')
             sub = r.findall(cur[4])
             history = r.findall(cur[5])
-            print(sub)
-            print(history)
             '''
             diff
             '''
