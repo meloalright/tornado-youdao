@@ -3,8 +3,8 @@ import tornado.websocket
 from .base import BaseHandler
 import json
 import random
+import hashlib
 import re
-
 
 class UsiHandler(BaseHandler):
     def set_default_headers(self):
@@ -40,6 +40,9 @@ class UsiSignupHandler(UsiHandler):
  # @ UsiLoginHandler
 '''
 class UsiLoginHandler(UsiHandler):
+    def cvtmd5(self, num):
+        return hashlib.md5( (str(num) + random.choice('OA_2954@3S#1cWA8*i')).encode(encoding='utf-8') ).hexdigest()
+
     def post(self):
         name = self.get_argument("name", None)
         password = self.get_argument("password", None)
@@ -48,10 +51,26 @@ class UsiLoginHandler(UsiHandler):
             um = self.user_model()
             user = um.valid_user(name, password)
             if user:
+                id = user['id']
                 nickname = user['name']
-                redis_hash_id = str(user['id']) + random.choice('OA_2954@3S#1cWA')
+                '''
+                #set redis
+                '''
+                redis_hash_id = self.cvtmd5(id)
+                redis_hash_nickname = self.cvtmd5(nickname)
+
+                self.redis_object().setex(redis_hash_id, id, 900)
+                self.redis_object().setex(redis_hash_nickname, nickname, 900)
+                '''
+                print(redis_hash_id)
+                print('set redis id')
+                #
+                '''
+
+                #set cookie
                 self.set_secure_cookie('sessid', redis_hash_id, expires_days=1)
                 self.set_secure_cookie('nick', '{nickname}'.format(nickname=nickname), expires_days=1)
+
                 return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': user}))
 
             else:
@@ -77,9 +96,16 @@ class UsiLogoutHandler(UsiHandler):
 '''
 class UsiGetNoteListHandler(UsiHandler):
     def get(self):
+        '''
         #redis get id
+        '''
         sessid = self.get_secure_cookie('sessid').decode()
-        id = sessid
+        id = self.redis_object().get(sessid).decode()
+        '''
+        print(id)
+        print(sessid)
+        print('get redis id')
+        '''
         if id:
             um = self.user_model()
             note_list = um.get_user_note_list(id)

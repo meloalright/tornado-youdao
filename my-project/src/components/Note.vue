@@ -1,7 +1,7 @@
 <template>
   <div class="root">
     <div class="top-line clearfix">
-      <div class="save-statement" v-on:click="putModified()">{{save.statement}}</div>
+      <div class="save-statement" v-on:click="saves(()=>{})">{{save.statement}}</div>
     </div>
     <div class="line"></div>
     <input class="youdao-title" v-model="title"/>
@@ -36,21 +36,42 @@ export default {
      * @
      **/
     heartbeat: function () {
-      fetch('http://localhost:8002/api/heartbeat/').then((res) => {
-        return res.json()
-      }).then((data) => {
-        console.log(data);
-      })
+      var that = this;
+      this.saves(function () {
+        setTimeout(() => {that.heartbeat();console.log('save')}, 10000);
+      });
     },
 
     /*
-     * @
-     * @ 提交更改
-     * @
+     *
+     * @ 保存
+     *
      **/
-    putModified: function () {
-      this.ws.send(this.note);
+    saves: function (cb) {
+      var that = this;
+      var re = RegExp('/spa/(.*)?/#/note/')
+      var room = location.href.match(re)[1];
+
+      cb();
+
+      fetch('http://localhost:8002/api/heartbeat/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: encodeURI('hash_id=' + room + '&name=' + that.title + '&sub=' + that.note + '\n'/*每一行都有换行符*/)
+      }).then((res) => {
+        if (res.code === 200 || res.code === '200') {
+          // 重置
+          that.save.statement = 'SAVING';
+          console.log('保存');
+          setTimeout(() => {that.save.statement = 'SAVE';}, 2000);
+          // 再拉新请求
+          //setTimeout(that.heartbeat, 10000)
+        }
+      })
     },
+
 
     /*
      * @
@@ -209,7 +230,18 @@ export default {
     },
 
 
-
+    fetchNote: function () {
+      var that = this;
+      var re = RegExp('/spa/(.*)?/#/note/')
+      var room = location.href.match(re)[1];
+      fetch('/api/get-note/' + '?hash_id=' + room).then((res) => {
+        return res.json()
+      }).then((data) => {
+        data = data.data;
+        this.title = data.name;
+        this.note = data.sub;
+      })
+    },
 
     /*
      * @
@@ -239,6 +271,8 @@ export default {
         }
       };
       this.ws = ws;
+      this.fetchNote();
+      setTimeout(() => {this.heartbeat();}, 5000);
     }
   },
 
@@ -264,6 +298,11 @@ export default {
   height: 50px;
   display: block;
 }
+
+.root .top-line .save-statement:hover {
+  color: #41b883;
+}
+
 .root .top-line .save-statement {
   margin: 10px 20px 0 10px;
   border: solid 1px #EEE;

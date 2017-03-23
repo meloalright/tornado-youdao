@@ -103,7 +103,6 @@ class differ(object):
     # lazy压入[+]逻辑
     def _push_plus_diff_lazy(self, source, dist):
         diff_mat = self._diff_matrix
-
         f = 0
 
         #answer = []
@@ -140,6 +139,40 @@ class differ(object):
             else:
                 sets.remove(None)
                 f = list(sets)[0] + 1
+
+
+
+
+    #
+    #
+    # @ lazy
+    #
+    # lazydiff调用入口
+    def highlight_diff(self, source, dist, ifreset=True):
+
+        self._init_diff_list(source, dist)
+        self._init_diff_matrix_lazy(source, dist)
+        self._push_minus_diff_lazy(source, dist)
+        self._push_plus_diff_lazy(source, dist)
+        print(2)
+
+        highlight = []
+        for index in range(0, len(self._diff_list)):
+            l = self._diff_list[index]
+            try:
+                if l == []:
+                    highlight.append(source[index])
+                else:
+                    for o in l:
+                        highlight.append(('{type} @{pos} {str}').format(type=o['type'], pos=o['pos'], str=o['str']))
+            except:
+                pass
+        if ifreset:
+            self._reset()
+        return highlight
+
+
+
 
 
 

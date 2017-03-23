@@ -13,12 +13,19 @@ from .base import BaseHandler
 
 class HomeHandler(BaseHandler):
     def get(self, template_variables = {}):
-        sessid = self.get_secure_cookie("sessid")
-        sessid = 1
-        id = sessid
+        '''
+        #redis get id
+        '''
+        try:
+            sessid = self.get_secure_cookie('sessid').decode()
+            id = self.redis_object().get(sessid).decode()
 
-        if id:
-            um = self.user_model()
-            note_list = um.get_user_note_list(id)
+            if id:
+                um = self.user_model()
+                note_list = um.get_user_note_list(id)
+                self.render("home.html",note_list=note_list)
+            else:
+                self.redirect('/', permanent=False)
+        except:
+            self.redirect('/', permanent=False)
 
-        self.render("home.html",note_list=note_list)

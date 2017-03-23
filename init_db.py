@@ -32,7 +32,8 @@ class initDbModel(Query):
                     NAME           TEXT    NOT NULL,
                     AUTHOR         INT     NOT NULL,
                     ISCOMMON       INT     NOT NULL,
-                    SUB        CHAR(1000));
+                    SUB        CHAR(1000),
+                    HISTORY        CHAR(1000));
                    ''')
 
 
@@ -48,12 +49,12 @@ class initDbModel(Query):
         user = um.valid_user('melo', '999999')
         um.update_password(user['id'], '000000')
         print(um.valid_user('melo', '000000'))
-
+        
         nm = NoteModel(self.db)
-        nm.create_note_object('melo \'s first note', 1, 1, 'This is melo \'s first note')
-        nm.create_note_object('melo \'s second note', 1, 1, 'This is melo \'s second note')
-        nm.set_uncommon(2)
-        nm.update_note(1, 'Melo \'s first note', 'This is melo \'s first note yeah')
+        nm.create_note_object('melo的个人笔记', 1, 1, '这个文档是不支持中文多人协同编辑的\n但是是支持中文的版本记录\n')
+        nm.create_note_object('melo的第二篇笔记', 1, 1, '这个文档是不支持中文多人协同编辑的\n但是是支持中文的版本记录\n')
+        #nm.set_uncommon(2)
+        nm.update_note(1, 'Melo 笔记', '这个文档是不支持中文多人协同编辑的\n但是是支持中文的版本记录\n')
         print(nm.get_note(1))
         print(nm.get_note(2))
         print(um.get_user_note_list(1))

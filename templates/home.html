@@ -5,30 +5,41 @@
     <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/twitter-bootstrap/2.2.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="http://www.bootcss.com/p/flat-ui/css/flat-ui.css">
     <style type="text/css">
+        .h280 {
+            min-height: 280px;
+        }
+        .h140 {
+            min-height: 140px;
+        }
         .margin-20 {
             margin: 20px;
+        }
+        .hover-green:hover {
+            background: #69eca1;
         }
     </style>
 </head>
 <body>
-    <div class="span2 margin-20" id="logout">
-        <div class="navbar navbar-inverse">
-            <div class="navbar-inner">
-              <div class="nav-collapse collapse">
-                  <ul class="nav">
-                    <li>
-                      <a href="#">
-                        Log out
-                        <span class="navbar-unread">1</span>
-                      </a>
-                    </li>
-                  </ul>
-              </div>
+    <div class="h140 margin-20">
+        <div class="span2" id="logout">
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner">
+                  <div class="nav-collapse collapse">
+                      <ul class="nav">
+                        <li>
+                          <a href="#">
+                            Log out
+                            <span class="navbar-unread">1</span>
+                          </a>
+                        </li>
+                      </ul>
+                  </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="demo-headline">
+    <div class="">
         <h1 class="demo-logo">
             <div class="logo"></div>
         </h1>
@@ -36,23 +47,38 @@
 
     <div class="row mbl margin-20">
         {% for note in note_list %}
-        <a href="/spa/{{note['base64']}}/#/note/">
-            <div class="span2">
-              <dl class="palette palette-success">
-                <dt>笔记:</dt>
-                <dd>{{note['name']}}</dd>
-              </dl>
-              <dl class="palette palette-success-dark">
-                <dt>加密ID: {{note['base64']}}</dt>
-                {%if note['iscommon'] == 1 %}
-                <dd>已共享</dd>
-                {% else %}
-                <dd>还未共享</dd>
-                {% end %}
+            <div class="span2 h280">
+              <a href="/spa/{{note['base64']}}/#/note/">
+                  <dl class="palette palette-success hover-green">
+                    <dt>编辑笔记:</dt>
+                    <dd>{{note['name']}}</dd>
+                  </dl>
+              </a>
+              <div href="javascript:void(0)">
+                  <dl class="palette palette-success-dark">
+                    <dt>加密ID: {{note['base64']}}</dt>
+                    {%if note['iscommon'] == 1 %}
+                    <dd>已共享</dd>
+                    {% else %}
+                    <dd>还未共享</dd>
+                    {% end %}
+                  </dl>
+              </div>
+              <a href="/history/{{note['base64']}}/">
+                  <dl class="palette palette-success hover-green">
+                        <dd>查看版本记录</dd>
+                  </dl>
+              </a>
+            </div>
+        {% end %}
+        <a id="new" href="javascript:void(0)">
+            <div class="span2 h180">
+              <dl class="palette palette-success hover-green">
+                <dt>新建+</dt>
+                <dd></dd>
               </dl>
             </div>
         </a>
-        {% end %}
     </div>
     <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
@@ -60,6 +86,7 @@
             var fn = {
                 bind: function () {
                     var logout = $('#logout');
+                    var $new = $('#new');
 
                     logout.on('click', function () {
                         $.ajax('/api/logout/', {
@@ -73,6 +100,23 @@
                                 }
                                 else {
                                     location.href = '/';
+                                }
+                            }
+                        });
+                    });
+
+                    $new.on('click', function () {
+                        $.ajax('/api/new-note/', {
+                            type:'POST',
+                            dataType: 'JSON',
+                            data: { 
+                            },
+                            success: function (res) {
+                                if (res.code === 200 || res.code === '200') {
+                                    location.href = location.href;
+                                }
+                                else {
+                                    location.href = location.href;
                                 }
                             }
                         });

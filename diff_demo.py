@@ -13,10 +13,8 @@ def test_diff():
     '''
     打印diff_patch
     '''
-    print('======diff-lazy-patch======')
-    for line in d.diff(source, dist):
-        print('@{pos} {type} {str}'.format(pos=line['pos'], type=line['type'], str=line['str']))
-
+    hightlight = d.highlight_diff(source, dist)
+    print(hightlight)
 
 
 def test_merge():
@@ -30,5 +28,5 @@ def test_merge():
 
 
 if __name__ == '__main__':
-    ##test_diff()
+    test_diff()
     test_merge()

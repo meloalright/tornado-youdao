@@ -9,7 +9,7 @@ export default {
   name: 'Head',
   data () {
     return {
-      msg: 'Head'
+      msg: 'tornado-youdao'
     }
   }
 }

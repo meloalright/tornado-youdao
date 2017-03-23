@@ -13,4 +13,17 @@ from .base import BaseHandler
 
 class NoteHandler(BaseHandler):
     def get(self, template_variables = {}):
-        self.render("spa/index.html")
+        '''
+        #redis get id
+        '''
+        try:
+            sessid = self.get_secure_cookie('sessid').decode()
+            id = self.redis_object().get(sessid).decode()
+
+
+            if id is not None:
+                self.render("spa/index.html")
+            else:
+                self.redirect('/', permanent=False)
+        except:
+            self.redirect('/', permanent=False)

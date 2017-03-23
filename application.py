@@ -24,6 +24,7 @@ import handler.index
 import handler.signup
 import handler.home
 import handler.note
+import handler.history
 
 import handler.api
 import handler.usi
@@ -56,6 +57,7 @@ class Application(tornado.web.Application):
             (r"/", handler.index.IndexHandler),
             (r"/signup/", handler.signup.SignupHandler),
             (r"/home/", handler.home.HomeHandler),
+            (r"/history/(.*)/", handler.history.HistoryHandler),
 
             (r"/spa/(.*)/", handler.note.NoteHandler),
             # signup
@@ -69,6 +71,8 @@ class Application(tornado.web.Application):
 
             # new api
             (r"/api/new-note/", handler.api.ApiNewNoteHandler),
+            # get note api
+            (r"/api/get-note/", handler.api.ApiGetNoteHandler),
             # delete api
             (r"/api/delete-note/", handler.api.ApiDeleteNoteHandler),
             #save api
@@ -82,6 +86,8 @@ class Application(tornado.web.Application):
 
 
         self.db = sqlite3.connect('db/youdao.db')
+
+        self.redis = redis.Redis(host='127.0.0.1', port=6379)
 
         self.loader = Loader(self.db)
         self.user_model = self.loader.use("user.model")

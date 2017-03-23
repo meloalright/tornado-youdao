@@ -13,6 +13,9 @@ class BaseHandler(tornado.web.RequestHandler):
         super(BaseHandler, self).__init__(*argc, **argkw)
 
 
+    def redis_object(self):
+        return self.application.redis
+
     def user_model(self):
         return self.application.user_model
 
