@@ -33,7 +33,8 @@ class NoteModel(Query):
     def clear_hash(self, hash_id):
         return decvt64(hash_id)
 
-    def fetch_diff(self, id):
+    #### gen need ####
+    def fetch_diff(self, id, callback):
         cur = self.select_one('WHERE ID = {id}'.format(id=id))
         if cur:
             r = re.compile(r'(.*\n)')
@@ -45,20 +46,20 @@ class NoteModel(Query):
             d = differ()
 
             hightlight = d.highlight_diff(history, sub)
-            return hightlight
+            return callback(hightlight)
         else:
-            return None
+            return callback(None)
 
-    def get_note(self, id):
+    def get_note(self, id, callback):
         cur = self.select_one('WHERE ID = {id}'.format(id=id))
         if cur:
-            return {
+            return callback({
                 'name': cur[1],
                 'author': cur[2],
                 'iscommon': cur[3],
                 'sub': cur[4],
                 'history': cur[5],
 
-            }
+            })
         else:
-            return None
+            return callback(None)

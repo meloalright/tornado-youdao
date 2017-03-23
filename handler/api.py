@@ -1,4 +1,5 @@
 import tornado.web
+import tornado.gen
 import tornado.websocket
 from .base import BaseHandler
 from lib.diff import merger
@@ -24,10 +25,11 @@ q = queue.Queue()
 
 class ApiHandler(BaseHandler):
     def set_default_headers(self):
+        '''
         self.set_header("Access-Control-Allow-Origin", "*")
         self.set_header("Access-Control-Allow-Headers", "x-requested-with")
         self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-
+        '''
 
 
 '''
@@ -52,13 +54,15 @@ class ApiNewNoteHandler(ApiHandler):
  # @ ApiGetNoteHandler
 '''
 class ApiGetNoteHandler(ApiHandler):
+    @tornado.web.asynchronous
+    @tornado.gen.coroutine
     def get(self):
 
         hash_id = self.get_argument("hash_id", None)
         if hash_id:
             nt = self.note_model()
             nid = nt.clear_hash(hash_id)
-            note = nt.get_note(nid)
+            note = yield tornado.gen.Task(nt.get_note, nid)
             if note:
                 return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': note}))
             else:

@@ -55,8 +55,6 @@ class initDbModel(Query):
         nm.create_note_object('melo的第二篇笔记', 1, 1, '这个文档是不支持中文多人协同编辑的\n但是是支持中文的版本记录\n')
         #nm.set_uncommon(2)
         nm.update_note(1, 'Melo 笔记', '这个文档是不支持中文多人协同编辑的\n但是是支持中文的版本记录\n')
-        print(nm.get_note(1))
-        print(nm.get_note(2))
         print(um.get_user_note_list(1))
 
 
