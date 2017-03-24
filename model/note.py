@@ -12,7 +12,7 @@ class NoteModel(Query):
 
     def create_note_object(self, name, author, iscommon, sub):
         self.add('(NAME, AUTHOR, ISCOMMON, SUB, HISTORY) VALUES ("{name}", "{author}",\
-            "{iscommon}", "{sub}", "\n")'.format(name=name, author=author, iscommon=iscommon, sub=sub))
+            "{iscommon}", "{sub}", "\n\n")'.format(name=name, author=author, iscommon=iscommon, sub=sub))
 
     def set_common(self, id):
         self.update('SET ISCOMMON = 1 WHERE ID = {id}'.format(id=id))

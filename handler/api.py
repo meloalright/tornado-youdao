@@ -44,7 +44,7 @@ class ApiNewNoteHandler(ApiHandler):
         id = self.redis_object().get(sessid).decode()
         if id:
             nm = self.note_model()
-            nm.create_note_object('No title yet', id, 1, 'Create your note here.')
+            nm.create_note_object('我的笔记', id, 1, '这个文档是不支持中文多人协同编辑的\n但是是支持中文的版本记录\n')
             return self.write(json.dumps({'code': 200, 'msg': 'ok', 'data': {}}))
         else:
             return self.write(json.dumps({'code': 1, 'msg': 'error', 'data': {}}))
