@@ -16,9 +16,8 @@ class HistoryHandler(BaseHandler):
     @tornado.web.asynchronous
     @tornado.gen.coroutine
     def get(self, hash_id):
-        #print('====start====')
 
-        if hash_id:
+        try:
             sessid = self.get_secure_cookie('sessid').decode()
             uid = self.redis_object().get(sessid).decode()
             um = self.user_model()
@@ -52,6 +51,6 @@ class HistoryHandler(BaseHandler):
                 self.render('history.html', diff=diff, note=note)
             else:
                 self.redirect('/home/', permanent=False)
-        else:
+        except:
             self.redirect('/home/', permanent=False)
 
