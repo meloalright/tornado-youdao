@@ -86,6 +86,8 @@ source:本是同根生
    
    
 `项目启动`   
-`/usr/local/bin/redis-server /etc/redis.conf`   
-`python3 init_db.py`   
-`python3 application.py`   
+```
+/usr/local/bin/redis-server /etc/redis.conf   
+python3 init_db.py   
+python3 application.py   
+```
