@@ -59,8 +59,9 @@ mv.sh: shell脚本 = 迁移vue-build文件至模板目录的脚本
    
    
 `diff算法`
-```
+```python
 >> python3 diff_demo.py
+
 ['+ @0 完整版\n', '\n', '- @2 煮豆燃豆萁\n', '+ @2 煮豆持作羹\n', '+ @2 漉菽以为汁\n', '+ @2 萁在釜下燃\n', '豆在釜中泣\n', '- @4 本是同根生\n', '+ @4 本自同根生\n', '相煎何太急\n', '\n', '曹植']
 [[{'pos': 0, 'type': '+', 'str': '完整版\n'}], [], [{'pos': 2, 'type': '-', 'str': '煮豆燃豆萁\n'}, {'pos': 2, 'type': '+', 'str': '煮豆持作羹\n'}, {'pos': 2, 'type': '+', 'str': '漉菽以为汁\n'}, {'pos': 2, 'type': '+', 'str': '萁在釜下燃\n'}], [], [{'pos': 4, 'type': '-', 'str': '本是同根生\n'}, {'pos': 4, 'type': '+', 'str': '本自同根生\n'}], [], [], [], []]
 [[{'pos': 0, 'type': '-', 'str': '七步诗\n'}, {'pos': 0, 'type': '+', 'str': '情绪版\n'}, {'pos': 0, 'type': '+', 'str': '七步诗~\n'}], [], [], [], [{'pos': 4, 'type': '-', 'str': '本是同根生\n'}, {'pos': 4, 'type': '+', 'str': '本是同根生!!\n'}, {'pos': 4, 'type': '+', 'str': '相煎何太急?!\n'}], [{'pos': 5, 'type': '-', 'str': '相煎何太急\n'}], [], [{'pos': 7, 'type': '-', 'str': '曹植'}, {'pos': 7, 'type': '+', 'str': '曹植~'}], []]
@@ -87,7 +88,7 @@ source:本是同根生
    
    
 `项目启动`   
-```
+```python
 /usr/local/bin/redis-server /etc/redis.conf   
 python3 init_db.py   
 python3 application.py   
