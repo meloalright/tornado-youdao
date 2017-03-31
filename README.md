@@ -1,9 +1,14 @@
+![Alt text](/img/welcome_1.jpg)    
+   
+   
+   
+   
+   
+
 # tornado-youdao    
    
 ### [vue.js] + [tornado] + [手写orm] + [diff] + [redis] + [websocket] 实现微型的网易云笔记
    
-![Alt text](/img/welcome_1.jpg)    
-![Alt text](/img/welcome_2.jpg)    
    
    
 ```python
@@ -60,7 +65,13 @@ mv.sh: shell脚本 = 迁移vue-build文件至模板目录的脚本
 ```      
    
    
-`diff算法`
+`diff算法`   
+   
+   
+   
+![Alt text](/img/welcome_2.jpg)    
+   
+   
 ```python
 >> python3 diff_demo.py
 
