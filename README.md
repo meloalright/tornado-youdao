@@ -2,6 +2,8 @@
    
 ### [vue.js] + [tornado] + [手写orm] + [diff] + [redis] + [websocket] 实现微型的网易云笔记
    
+![Alt text](/img/welcome_1.jpg)    
+![Alt text](/img/welcome_2.jpg)    
    
    
 ```python
