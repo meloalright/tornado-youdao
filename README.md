@@ -53,6 +53,8 @@ init_db.py: 初始化数据库
 mv.sh: shell脚本 = 迁移vue-build文件至模板目录的脚本
 
 ```
+      
+   
    
    
 `cvt64`   
@@ -63,13 +65,12 @@ mv.sh: shell脚本 = 迁移vue-build文件至模板目录的脚本
 >>> decvt64('MQ==')
 1
 ```      
+      
+   
    
    
 `diff算法`   
    
-   
-   
-![Alt text](/img/welcome_2.jpg)    
    
    
 ```python
@@ -98,6 +99,8 @@ source:本是同根生
 
 曹植~
 ```   
+      
+   
    
    
 `项目启动`   
