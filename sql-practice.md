@@ -637,7 +637,7 @@ select * from score where degree = (select max(degree) from score);
 
 43、查询和“李军”同性别的所有同学的Sname.
 
-sqlite> select sname from student where ssex = (select ssex from student where sname = '李军');
+sqlite> todo
 
 曾华
 匡明
@@ -648,7 +648,7 @@ sqlite> select sname from student where ssex = (select ssex from student where s
 
 44、查询和“李军”同性别并同班的同学Sname.
 
-sqlite> select sname from student where ssex = ( select ssex from student where sname = '李军') and class = (select class from student where sname = '李军');
+sqlite> todo
 
 曾华
 李军
