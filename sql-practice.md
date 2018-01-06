@@ -606,14 +606,14 @@ sqlite> select max(sbirthday) from student;
 
 40、以班号和年龄从大到小的顺序查询Student表中的全部记录。
 
-sqlite> select * from (select * from student order by sbirthday desc) order by class desc;
+sqlite> select * from (select * from student order by sbirthday asc) order by class desc;
 
-108|曾华|男|1967|95033
-101|李军|男|1954|95033
 107|王丽|女|1952|95033
-103|陆君|男|1965|95031
+101|李军|男|1954|95033
+108|曾华|男|1967|95033
 105|匡明|男|1963|95031
 109|王芳|女|1963|95031
+103|陆君|男|1965|95031
 
 
 
