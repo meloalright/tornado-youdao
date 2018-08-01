@@ -1,4 +1,4 @@
-#sql-practive   
+# sql-practice   
    
 ```sql
 >>> sqlite3
@@ -74,7 +74,7 @@ INSERT INTO TEACHER(TNO,TNAME,TSEX,TBIRTHDAY,PROF,DEPART)
 VALUES (831,'刘冰','女','1977-08-14','助教','电子工程系');
 ```
     
-##题目   
+## 题目   
      
 ```sql
 1、 查询Student表中的所有记录的Sname、Ssex和Class列。 
